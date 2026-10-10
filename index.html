@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>供應鏈中的企業人權管理</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
@@ -26,8 +26,8 @@
   .reveal h2 { font-size: 48px; font-weight: 800; line-height: 1.2; }
   .reveal .progress { color: var(--orange); }
   .reveal .slide-number { color: var(--muted); background: transparent; font-size: 16px; }
-  .slide { height: 720px; padding: 44px 64px; box-sizing: border-box; position: relative; }
-  .slide.center-title h2 { text-align: center; }
+  .slide:not(.reveal) { height: 720px; padding: 44px 64px; box-sizing: border-box; position: relative; }
+  .slide:not(.reveal).center-title h2 { text-align: center; }
   .gold { color: var(--gold); } .orange { color: var(--orange); } .muted { color: var(--muted); }
   .sub-tag { display:inline-block; font-size:15px; font-weight:700; padding:3px 12px; border-radius:14px; background: var(--gold); color:#1b2a44; }
   .sub-tag.o { background: var(--orange); color:#fff; }
@@ -168,8 +168,8 @@
 
   /* ===== v2 新增 ===== */
   .ai-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55; z-index:0; pointer-events:none; }
-  .slide > *:not(.ai-bg) { position: relative; z-index: 1; }
-  .slide > .deco, .slide > .banner[style*="absolute"] { position:absolute; }
+  .slide:not(.reveal) > *:not(.ai-bg) { position: relative; z-index: 1; }
+  .slide:not(.reveal) > .deco, .slide:not(.reveal) > .banner[style*="absolute"] { position:absolute; }
   .src { position:absolute !important; left:64px; right:64px; bottom:16px; font-size:14px; color:#7f8ea8; line-height:1.4; }
   .src a { color:#9fb4d8; }
   h2.sm { font-size: 40px; }
@@ -261,7 +261,7 @@
   .vt button.mine[data-v=y] { background: var(--gold); border-color: var(--gold); color:#1b2a44; } .vt button.mine[data-v=y] i { color:#1b2a44; }
   .vt button.mine[data-v=n] { background: var(--orange); border-color: var(--orange); }.vt button.mine[data-v=n] i { color:#fff; }
 
-  #slide-qa .slide { padding-top: 32px; padding-bottom: 28px; }
+  #slide-qa .slide:not(.reveal) { padding-top: 32px; padding-bottom: 28px; }
   #slide-qa .qrow { padding: 8px 20px; }
   #slide-qa .vt button { padding: 6px 6px; }
   /* 案例頁 */
@@ -272,10 +272,26 @@
   .play-btn:hover { filter: brightness(1.1); }
   .play-btn kbd { background: rgba(0,0,0,.3); border-radius: 6px; padding: 0 10px; }
 
-  </style>
+  
+  /* ===== 手機 ===== */
+  html, body { height:100%; overflow:hidden; overscroll-behavior:none; -webkit-text-size-adjust:100%; }
+  #rotate { display:none; position:fixed; inset:0; z-index:3000; background:#0b1830; color:#fff; text-align:center; flex-direction:column; align-items:center; justify-content:center; padding:24px; font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif; }
+  #rotate .ph { width:90px; height:150px; border:6px solid #e0b252; border-radius:18px; margin-bottom:26px; animation: rot 2.4s ease-in-out infinite; position:relative; }
+  #rotate .ph::after { content:""; position:absolute; left:50%; bottom:8px; width:22px; height:6px; margin-left:-11px; background:#e0b252; border-radius:3px; }
+  @keyframes rot { 0%,25% { transform: rotate(0); } 60%,100% { transform: rotate(-90deg); } }
+  #rotate b { font-size:24px; color:#e0b252; display:block; margin-bottom:10px; }
+  #rotate p { max-width:92vw; font-size:17px; line-height:1.6; margin:0 0 22px; color:#dfe5f0; }
+  #rotate button { font-family:inherit; font-size:16px; padding:10px 22px; border-radius:30px; border:2px solid rgba(255,255,255,.4); background:transparent; color:#fff; }
+  @media (orientation:portrait) and (max-width:820px) { body:not(.allow-portrait) #rotate { display:flex; } }
+  #story-x { display:none; position:fixed; top:max(8px, env(safe-area-inset-top)); right:max(8px, env(safe-area-inset-right)); z-index:2100; width:46px; height:46px; border-radius:50%; border:2px solid #e0b252; background:rgba(11,24,48,.85); color:#fff; font-size:24px; line-height:1; }
+  #story.on ~ #story-x, body.story-open #story-x { display:block; }
+  @media (hover:none) { .hide-touch { display:none; } }
+</style>
 <link rel="stylesheet" href="story.css" />
 </head>
 <body>
+<div id="rotate"><div class="ph"></div><b>請將手機橫放</b><p>簡報是橫式版面，橫放後才能完整顯示。<br>（開啟手機的「自動旋轉」，並把手機轉成橫向）</p><button onclick="document.body.classList.add('allow-portrait')">仍要直式觀看</button></div>
+<button id="story-x" aria-label="關閉影片" onclick="window.__story&&window.__story.close()">✕</button>
 
 <!-- ===== SVG 圖標庫 ===== -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -478,7 +494,7 @@
         <p style="font-size:21px;line-height:1.65;">① 仲介費誰付？有收據嗎？<br>② 護照、居留證誰保管？<br>③ 工時紀錄對得上薪資單嗎？<br>④ 員工申訴怎麼處理、處理多久？<br>⑤ 合約與規定，員工看得懂嗎？</p>
       </div>
     </div>
-    <div style="text-align:center;margin-top:20px;"><button id="story-btn" class="play-btn">▶ 播放 15 秒卡通短片　（按 <kbd>V</kbd> 鍵・有旁白與對話）</button></div>
+    <div style="text-align:center;margin-top:20px;"><button id="story-btn" class="play-btn">▶ 播放 15 秒卡通短片　<span class="hide-touch">（按 <kbd>V</kbd> 鍵・有旁白與對話）</span></button></div>
     <div class="src">案例依《天下雜誌》報導整理（<a href="https://www.cw.com.tw/article/5128875" target="_blank">原文</a>，全文需訂閱，細節以原文為準）；5 題為依 RBA 準則整理的人資端檢核問題；動畫為依報導情節改編的示意。</div>
   </div>
 </section>

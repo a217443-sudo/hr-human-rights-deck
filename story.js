@@ -11,7 +11,7 @@
   fetch('audio/timing.json').then(r => r.json()).then(j => { TOTAL = j.total; LINES = j.lines; }).catch(() => {});
 
   function fit() { const s = Math.min(innerWidth / W, innerHeight / H); stage.style.transform = `translate(-50%,-50%) scale(${s})`; }
-  addEventListener('resize', fit);
+  addEventListener('resize', fit); addEventListener('orientationchange', () => setTimeout(fit, 250));
 
   const TEMPLATE = `
   <div class="cam">
@@ -158,7 +158,7 @@
     stage.innerHTML = '';
   }
   function play(opts) {
-    stopAll(); fit(); open = true; root.classList.add('on'); root.setAttribute('aria-hidden', 'false');
+    stopAll(); fit(); open = true; root.classList.add('on'); document.body.classList.add('story-open'); root.setAttribute('aria-hidden', 'false');
     T = build();
     if (opts && typeof opts.seek === 'number') { T.seek(opts.seek, false); return; }
     aud = new Audio('audio/story.mp3'); aud.muted = muted; aud.preload = 'auto';
@@ -166,7 +166,7 @@
     const p = aud.play(); // 聲音與畫面一起開始
     if (p && p.then) p.then(go).catch(go); else go();
   }
-  function close() { stopAll(); open = false; root.classList.remove('on'); root.setAttribute('aria-hidden', 'true'); }
+  function close() { stopAll(); open = false; root.classList.remove('on'); document.body.classList.remove('story-open'); root.setAttribute('aria-hidden', 'true'); }
   window.__story = { play, close };
 
   const onCase = () => (Reveal.getCurrentSlide() || {}).id === 'slide-case2';
