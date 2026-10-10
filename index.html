@@ -6,7 +6,6 @@
 <title>供應鏈中的企業人權管理</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
-<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
 <style>
   :root {
     --bg: #12233f; --bg2: #0d1a30; --panel: rgba(255,255,255,0.06);
@@ -144,7 +143,9 @@
   #wc-list { font-size: 16px; overflow-y:auto; flex:1; color:#dfe5f0; }
   #wc-list div { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.07); }
   .wc-canvasbox { position:relative; background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:14px; overflow:hidden; }
-  #wc-canvas { width:100%; height:100%; display:block; }
+  #wc-cloud { position:absolute; inset:0; display:flex; flex-wrap:wrap; align-content:center; justify-content:center; gap:6px 18px; padding:14px 16px; overflow:hidden; }
+  #wc-cloud span { font-weight:800; line-height:1.15; white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; animation: wcpop .5s ease-out both; }
+  @keyframes wcpop { from { opacity:0; transform:scale(.6); } to { opacity:1; transform:none; } }
   #wc-empty { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#6c7c98; font-size:22px; text-align:center; line-height:1.9; pointer-events:none; }
   .q-hint { font-size: 22px; color: #dfe5f0; line-height: 1.6; margin-top: 8px; }
   .poll-opts { display:flex; flex-direction:column; gap: 12px; margin-top: 18px; }
@@ -350,7 +351,7 @@
         </div>
       </div>
       <div class="wc-canvasbox">
-        <canvas id="wc-canvas"></canvas>
+        <div id="wc-cloud"></div>
         <div id="wc-empty">輸入第一個答案<br>文字雲就會出現 ✨</div>
       </div>
     </div>
@@ -794,7 +795,7 @@
   });
 
   // 資料庫無法使用（權限不足／離線）時，自動改為「本機模式」：資料只存在這台電腦的瀏覽器
-  let wcLive = true;
+  let wcLive = true, lastRemote = [];
   const lsGet = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
   const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   const localWords = lsGet(SLUG + '_local_words', []);
@@ -824,18 +825,19 @@
   document.getElementById('wc-btn').addEventListener('click', wcSubmit);
 
   function drawWordCloud() {
-    const canvas = document.getElementById('wc-canvas');
-    if (typeof WordCloud === 'undefined') return;
-    const rect = canvas.getBoundingClientRect();
-    if (rect.width < 10 || rect.height < 10 || !wcData.length) return;
-    canvas.width = rect.width; canvas.height = rect.height;
-    const max = wcData[0][1];
-    WordCloud(canvas, {
-      list: wcData.map(([w, c]) => [w, Math.max(22, Math.round((c / max) * 80))]),
-      gridSize: 8, weightFactor: 1, rotateRatio: 0.25, shuffle: true,
-      fontFamily: '"Noto Sans TC","Microsoft JhengHei",sans-serif',
-      color: () => COLORS[Math.floor(Math.random() * COLORS.length)],
-      backgroundColor: 'transparent'
+    const box = document.getElementById('wc-cloud'); if (!box) return;
+    box.replaceChildren();
+    if (!wcData.length) return;
+    const n = wcData.length, max = wcData[0][1];
+    const top = Math.max(30, Math.min(72, 86 - n * 3));     // 字越多，字級自動縮小，確保全部放得下
+    const shown = wcData.slice(0, 80);
+    shown.forEach(([w, c], i) => {
+      const sp = document.createElement('span');
+      sp.textContent = w;
+      sp.style.fontSize = Math.max(18, Math.round(top * (0.5 + 0.5 * c / max))) + 'px';
+      sp.style.color = COLORS[(i * 5 + w.length) % COLORS.length];
+      sp.style.animationDelay = (i % 12) * 0.03 + 's';
+      box.appendChild(sp);
     });
   }
   function renderWords(words) {
@@ -859,8 +861,8 @@
     const words = [];
     gotSnap = true; wcLive = true; showMode(true);
     snap.forEach(d => { const w = d.data().word; if (typeof w === 'string') words.push(w); });
-    renderWords(words);
-  }, err => { console.error('wordcloud', err); wcLive = false; showMode(false); renderWords(localWords); });
+    lastRemote = words; renderWords(words);
+  }, err => { console.error('wordcloud', err); wcLive = false; showMode(false); renderWords(lastRemote.concat(localWords)); });
   Reveal.on('slidechanged', e => { if (e.currentSlide?.id === 'slide-wordcloud') setTimeout(drawWordCloud, 200); });
 
   // ===== 投票 =====
