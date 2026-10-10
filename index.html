@@ -757,7 +757,7 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
-  import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy,
+  import { initializeFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy,
            doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
 
   const app = initializeApp({
@@ -768,7 +768,11 @@
     messagingSenderId: "852916054832",
     appId: "1:852916054832:web:4227588d09f0de990a36f5"
   });
-  const fdb = getFirestore(app);
+  // 手機／App 內建瀏覽器（LINE、Teams 等）常擋住即時串流，改用長輪詢並自動偵測，較穩定
+  const fdb = initializeFirestore(app, { experimentalAutoDetectLongPolling: true, useFetchStreams: false });
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms))]);
+  let gotSnap = false;
+  setTimeout(() => { if (!gotSnap) showMode(false); }, 9000);
   const SLUG = 'hrdd_supply_chain';
 
   let uid;
@@ -801,23 +805,20 @@
       el.style.cssText = 'position:fixed;left:12px;bottom:10px;z-index:50;font-size:13px;padding:3px 10px;border-radius:10px;background:rgba(238,123,48,.85);color:#fff;font-family:inherit;';
       document.body.appendChild(el);
     }
-    el.textContent = '互動為本機模式（僅此電腦可見）';
+    el.textContent = '目前無法連上即時資料庫：互動僅在此裝置顯示（請改用 Chrome／Safari 開啟，勿用 LINE 內建瀏覽器）';
     el.style.display = live ? 'none' : '';
   }
 
   async function wcSubmit() {
     const word = inp.value.trim();
     if (!word) return;
-    const btn = document.getElementById('wc-btn');
-    btn.disabled = true;
-    try {
-      if (wcLive) {
-        try { await addDoc(wordsRef, { word, created_at: serverTimestamp() }); inp.value = ''; return; }
-        catch (e) { console.error(e); wcLive = false; showMode(false); }
-      }
-      localWords.push(word); lsSet(SLUG + '_local_words', localWords);
-      renderWords(localWords); inp.value = '';
-    } finally { btn.disabled = false; }
+    inp.value = ''; inp.blur();
+    if (wcLive) {
+      try { await withTimeout(addDoc(wordsRef, { word, created_at: serverTimestamp() }), 7000); return; }
+      catch (e) { console.error(e); wcLive = false; showMode(false); }
+    }
+    localWords.push(word); lsSet(SLUG + '_local_words', localWords);
+    renderWords(localWords);
   }
   inp.addEventListener('keypress', e => { if (e.key === 'Enter') wcSubmit(); });
   document.getElementById('wc-btn').addEventListener('click', wcSubmit);
@@ -856,6 +857,7 @@
   }
   onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
     const words = [];
+    gotSnap = true; wcLive = true; showMode(true);
     snap.forEach(d => { const w = d.data().word; if (typeof w === 'string') words.push(w); });
     renderWords(words);
   }, err => { console.error('wordcloud', err); wcLive = false; showMode(false); renderWords(localWords); });
@@ -878,7 +880,7 @@
       b.onclick = async () => {
         mine = o.id; lsSet(SLUG + '_' + docId, o.id);
         if (live) {
-          try { await setDoc(ref, { votes: { [uid]: o.id }, updated_at: serverTimestamp() }, { merge: true }); return; }
+          try { await withTimeout(setDoc(ref, { votes: { [uid]: o.id }, updated_at: serverTimestamp() }, { merge: true }), 7000); return; }
           catch (e) { console.error(e); live = false; showMode(false); }
         }
         localVotes[uid] = o.id; lsSet(SLUG + '_local_' + docId, localVotes);
@@ -904,7 +906,7 @@
       Object.values(votes).forEach(v => { counts[v] = (counts[v] || 0) + 1; });
       render(counts);
     }
-    onSnapshot(ref, snap => renderVotes((snap.data() || {}).votes || {}),
+    onSnapshot(ref, snap => { gotSnap = true; live = true; renderVotes((snap.data() || {}).votes || {}); },
       err => { console.error('poll', err); live = false; showMode(false); renderVotes(localVotes); });
   }
 
@@ -930,13 +932,13 @@
       const q = r.dataset.q, v = b.dataset.v, key = uid + '_q' + q;
       mine[q] = v; lsSet(SLUG + '_mine_questionnaire', mine); render(last);
       if (live) {
-        try { await setDoc(ref, { votes: { [key]: v }, updated_at: serverTimestamp() }, { merge: true }); return; }
+        try { await withTimeout(setDoc(ref, { votes: { [key]: v }, updated_at: serverTimestamp() }, { merge: true }), 7000); return; }
         catch (e) { console.error(e); live = false; showMode(false); }
       }
       localVotes[key] = v; lsSet(SLUG + '_local_questionnaire', localVotes); render(localVotes);
     }));
     render({});
-    onSnapshot(ref, snap => render((snap.data() || {}).votes || {}),
+    onSnapshot(ref, snap => { gotSnap = true; live = true; render((snap.data() || {}).votes || {}); },
       err => { console.error('qa', err); live = false; showMode(false); render(localVotes); });
   }
   makeQA();
