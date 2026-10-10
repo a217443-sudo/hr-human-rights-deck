@@ -1,0 +1,49 @@
+/* 案例②卡通短片樣式 */
+#story { position:fixed; inset:0; z-index:2000; background:#030a14; display:none; overflow:hidden; font-family:"Noto Sans TC","Microsoft JhengHei","Segoe UI",sans-serif; }
+#story.on { display:block; }
+#story .stage { position:absolute; left:50%; top:50%; width:1920px; height:1080px; transform-origin:center; overflow:hidden; background:#0b1830; color:#fff; }
+#story .cam { position:absolute; inset:0; }
+#story .cam > * { position:absolute; }
+#story .bg { inset:0; width:100%; height:100%; object-fit:cover; will-change:transform; }
+#story .halftone { inset:0; pointer-events:none; opacity:.14; background-image:radial-gradient(#000 22%, transparent 24%); background-size:14px 14px; mix-blend-mode:multiply; }
+#story .fx { inset:0; width:100%; height:100%; pointer-events:none; }
+
+/* 標籤 */
+#story .chip { left:70px; top:60px; font-size:44px; font-weight:900; background:#e0b252; color:#1b2a44; padding:10px 34px; border-radius:14px; border:6px solid #0b1830; box-shadow:8px 8px 0 #0b1830; transform:rotate(-3deg); }
+
+/* 對話框（漫畫風） */
+#story .bub { background:#fff; color:#10203a; border:8px solid #0b1830; border-radius:60px; padding:34px 50px 30px; box-shadow:10px 10px 0 rgba(11,24,48,.85); transform-origin:10% 100%; }
+#story .bub p { margin:0; font-size:66px; font-weight:900; line-height:1.28; letter-spacing:.02em; white-space:nowrap; }
+#story .bub .who { position:absolute; left:34px; top:-32px; background:#ee7b30; color:#fff; font-size:34px; font-weight:900; padding:4px 24px; border-radius:30px; border:5px solid #0b1830; }
+#story .bub .who.ch { background:#e0b252; color:#1b2a44; }
+#story .bub p { position:relative; z-index:2; }
+#story .bub .tail { position:absolute; z-index:1; width:0; height:0; border-left:38px solid transparent; border-right:38px solid transparent; border-top:60px solid #0b1830; }
+#story .bub .tail::after { content:""; position:absolute; left:-28px; top:-66px; width:0; height:0; border-left:28px solid transparent; border-right:28px solid transparent; border-top:50px solid #fff; }
+#story .b-a1 { left:290px; top:70px; } #story .b-a1 .tail { left:230px; bottom:-54px; }
+#story .b-c1 { left:520px; top:60px; } #story .b-c1 .tail { left:90px; bottom:-54px; }
+#story .b-c2 { left:490px; top:60px; } #story .b-c2 .tail { left:90px; bottom:-54px; }
+
+/* 旁白字幕 */
+#story .nar { left:120px; right:120px; bottom:90px; text-align:center; font-size:80px; font-weight:900; background:#fdf3c7; color:#10203a; border:8px solid #0b1830; border-radius:20px; padding:20px 40px; box-shadow:10px 10px 0 rgba(11,24,48,.85); }
+#story .nar b { position:absolute; left:30px; top:-30px; background:#0b1830; color:#e0b252; font-size:34px; padding:4px 24px; border-radius:30px; border:4px solid #e0b252; }
+
+/* 人資標籤、章、音效字 */
+#story .hrtag { left:90px; top:130px; font-size:64px; font-weight:900; background:#fff; color:#10203a; border:8px solid #0b1830; border-radius:18px; padding:12px 36px; box-shadow:10px 10px 0 rgba(11,24,48,.85); transform:rotate(-3deg); }
+#story .hrtag em { font-style:normal; color:#d93a3a; }
+#story .stamp { left:0; width:1920px; top:250px; text-align:center; }
+#story .stamp b { display:inline-block; font-size:230px; font-weight:900; color:#ff4d3d; border:22px solid #ff4d3d; border-radius:34px; padding:0 70px; line-height:1.2; background:rgba(255,255,255,.78); letter-spacing:.04em; }
+#story .sfxt { font-size:150px; font-weight:900; color:#ffe14d; -webkit-text-stroke:8px #0b1830; paint-order:stroke fill; letter-spacing:.05em; }
+#story .s-boom { left:1330px; top:80px; } #story .s-coin { left:1050px; top:120px; font-size:110px; }
+#story .coins { left:0; top:0; width:100%; height:100%; }
+#story .coin { position:absolute; left:640px; top:560px; width:76px; height:76px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#ffe9a8,#e0b252 60%,#b98a2e); border:5px solid #7a5410; color:#6b4a0c; font-weight:900; font-size:40px; text-align:center; line-height:64px; box-shadow:0 0 22px rgba(224,178,82,.9); box-sizing:border-box; }
+#story .badge { left:90px; top:120px; width:420px; text-align:center; background:#e0b252; color:#1b2a44; border:10px solid #0b1830; border-radius:36px; padding:16px 10px 6px; box-shadow:12px 12px 0 rgba(11,24,48,.85); }
+#story .badge small { display:block; font-size:50px; font-weight:900; } #story .badge b { display:block; font-size:210px; font-weight:900; line-height:1; color:#d93a3a; }
+#story .moral { left:0; width:1920px; top:60px; text-align:center; font-size:96px; font-weight:900; color:#fff; text-shadow:6px 6px 0 #0b1830, -3px -3px 0 #0b1830, 3px -3px 0 #0b1830, -3px 3px 0 #0b1830; }
+#story .moral span { color:#ffe14d; margin-right:.3em; }
+
+/* 轉場／框 */
+#story .flash { position:absolute; inset:0; background:#fff; pointer-events:none; }
+#story .frame { position:absolute; inset:0; border:16px solid #0b1830; box-shadow:inset 0 0 0 6px #e0b252; pointer-events:none; }
+#story .hud-n { position:absolute; left:50px; bottom:34px; font-size:22px; color:#fff; text-shadow:0 0 6px #000, 0 0 6px #000; z-index:5; }
+#story .hud-k { position:absolute; right:50px; top:34px; font-size:22px; color:#fff; z-index:5; background:rgba(0,0,0,.35); padding:2px 14px; border-radius:20px; }
+#story .prog { position:absolute; left:0; right:0; bottom:0; height:12px; background:rgba(255,255,255,.12); z-index:6; } #story .prog i { display:block; height:100%; width:100%; transform-origin:0 50%; background:linear-gradient(90deg,#e0b252,#ee7b30); }

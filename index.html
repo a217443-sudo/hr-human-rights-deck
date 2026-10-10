@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>供應鏈中的企業人權管理</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+<script src="https://cdn.jsdelivr.net/npm/wordcloud@1.2.2/src/wordcloud2.min.js"></script>
+<style>
+  :root {
+    --bg: #12233f; --bg2: #0d1a30; --panel: rgba(255,255,255,0.06);
+    --gold: #e0b252; --gold-d: #b98a2e; --orange: #ee7b30;
+    --text: #f3f5f9; --muted: #a9b6cc; --line: rgba(224,178,82,0.45);
+  }
+  html, body { background: var(--bg2); }
+  .reveal-viewport {
+    background:
+      linear-gradient(rgba(224,178,82,0.05) 1px, transparent 1px) 0 0 / 64px 64px,
+      linear-gradient(90deg, rgba(224,178,82,0.05) 1px, transparent 1px) 0 0 / 64px 64px,
+      radial-gradient(ellipse at 30% 20%, #1b3258 0%, var(--bg) 55%, var(--bg2) 100%);
+  }
+  .reveal { font-family: 'Noto Sans TC','Microsoft JhengHei','Segoe UI',sans-serif; color: var(--text); font-size: 26px; }
+  .reveal .slides section { text-align: left; }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: inherit; text-transform: none; color: var(--text); margin: 0; letter-spacing: 0; }
+  .reveal h2 { font-size: 48px; font-weight: 800; line-height: 1.2; }
+  .reveal .progress { color: var(--orange); }
+  .reveal .slide-number { color: var(--muted); background: transparent; font-size: 16px; }
+  .slide { height: 720px; padding: 44px 64px; box-sizing: border-box; position: relative; }
+  .slide.center-title h2 { text-align: center; }
+  .gold { color: var(--gold); } .orange { color: var(--orange); } .muted { color: var(--muted); }
+  .sub-tag { display:inline-block; font-size:15px; font-weight:700; padding:3px 12px; border-radius:14px; background: var(--gold); color:#1b2a44; }
+  .sub-tag.o { background: var(--orange); color:#fff; }
+  .card {
+    background: rgba(13,26,48,0.72); border: 2px solid var(--line); border-radius: 18px;
+    box-shadow: 8px 8px 0 rgba(224,178,82,0.14); padding: 26px 28px; box-sizing: border-box;
+  }
+  .card.hot { border-color: var(--orange); box-shadow: 8px 8px 0 rgba(238,123,48,0.2); }
+  .card h3 { font-size: 30px; font-weight: 800; }
+  .card p { font-size: 22px; line-height: 1.6; margin: 10px 0 0; color: #dfe5f0; }
+  .banner { border: 2px solid var(--orange); background: rgba(238,123,48,0.18); border-radius: 12px; padding: 16px 24px; font-size: 25px; font-weight: 700; text-align: center; }
+  svg.ic { width: 64px; height: 64px; fill: none; stroke: var(--gold); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 8px rgba(224,178,82,0.35)); }
+  svg.ic.big { width: 84px; height: 84px; }
+
+  /* 封面 */
+  .cover { display:flex; flex-direction:column; justify-content:center; }
+  .cover h1 { font-size: 60px; font-weight: 900; line-height: 1.25; }
+  .cover .sub { font-size: 30px; font-weight: 700; margin-top: 22px; line-height: 1.5; }
+  .cover .deco { position:absolute; right:30px; bottom:50px; width:430px; opacity:.95; }
+
+  /* 滑桿 */
+  .viz-wrap { position: relative; height: 430px; margin-top: 24px; border-radius: 16px; overflow: hidden; border: 2px solid var(--line); }
+  .viz-panel { position:absolute; inset:0; padding: 40px 56px; box-sizing:border-box; display:flex; flex-direction:column; justify-content:center; }
+  #viz-before { background: linear-gradient(135deg,#3b4d6b,#2a3a56); }
+  #viz-after  { background: linear-gradient(135deg,#0d1a30,#1a2c4d); clip-path: inset(0 100% 0 0); }
+  .viz-panel h3 { font-size: 44px; font-weight: 800; }
+  .viz-panel .k { font-size: 28px; font-weight: 700; margin: 10px 0 24px; }
+  .viz-panel p { font-size: 28px; line-height: 1.7; margin: 0; max-width: 820px; }
+  #viz-divider { position:absolute; top:0; left:0; width:4px; height:100%; background: linear-gradient(to bottom,transparent,var(--gold),transparent); box-shadow: 0 0 14px var(--gold); pointer-events:none; }
+  .viz-label { position:absolute; top:14px; font-size:16px; font-weight:700; padding:3px 12px; border-radius:12px; background: rgba(0,0,0,.35); transition: opacity .2s; }
+  #viz-slider { width: 100%; margin-top: 22px; accent-color: var(--orange); height: 28px; }
+
+  /* 三卡 */
+  .row3 { display:grid; grid-template-columns: repeat(3,1fr); gap: 28px; margin-top: 28px; }
+  .card .head { display:flex; align-items:center; gap:16px; }
+  .card .head h3 { line-height:1.2; }
+
+  /* 神殿 */
+  .temple { width: 920px; margin: 8px auto 0; }
+  .roof { height: 130px; background: linear-gradient(#e8c068,#c79a3a); clip-path: polygon(50% 0, 100% 100%, 0 100%); display:flex; align-items:flex-end; justify-content:center; padding-bottom:18px; box-sizing:border-box; }
+  .roof span { color:#2a1d05; font-weight:800; font-size:24px; text-align:center; line-height:1.3; }
+  .cols { display:flex; justify-content:space-between; padding: 8px 36px 0; }
+  .col { width: 138px; height: 250px; background: linear-gradient(90deg,#c9d3e4,#fff 50%,#c9d3e4); border-radius: 6px 6px 0 0; display:flex; align-items:center; justify-content:center; text-align:center; color:#14264a; font-weight:800; font-size:23px; line-height:1.35; padding: 0 8px; box-sizing:border-box; }
+  .base { height: 26px; background: #c9d3e4; margin-top: 0; border-radius: 4px; }
+  .note { margin-top: 20px; background: rgba(255,255,255,.92); color:#14264a; border-radius: 12px; padding: 14px 24px; font-size: 23px; font-weight: 700; line-height: 1.55; text-align:center; }
+
+  /* HRDD 四塊 */
+  .beam { margin: 24px auto 0; width: 1100px; text-align:center; padding: 20px; border: 2px solid var(--line); border-radius: 10px; background: rgba(13,26,48,.7); }
+  .beam b { font-size: 34px; color: var(--gold); } .beam div { font-size: 22px; margin-top: 6px; color:#dfe5f0; }
+  .arrows { display:flex; justify-content:space-around; width:1100px; margin: 0 auto; color: var(--gold); font-size: 34px; height: 44px; line-height: 44px; }
+  .row4 { display:grid; grid-template-columns: repeat(4,1fr); gap: 22px; width: 1100px; margin: 0 auto; }
+  .row4 .card { text-align:center; padding: 22px 16px; min-height: 280px; }
+  .row4 .card h3 small { display:block; font-size:21px; font-weight:600; margin-top:4px; }
+  .row4 .card.hl { background: rgba(224,178,82,.92); color:#1b2a44; border-color: var(--orange); }
+  .row4 .card.hl p, .row4 .card.hl h3 { color:#1b2a44; }
+
+  /* 循環 */
+  .cycle { position: relative; width: 1100px; height: 520px; margin: 50px auto 0; }
+  .cycle svg.inf { position:absolute; left:50px; top:70px; width:1000px; height:380px; opacity:.9; }
+  .hex { position:absolute; width: 230px; padding: 16px 12px; text-align:center; background: rgba(13,26,48,.92); border: 2px solid var(--text); border-radius: 18px; }
+  .hex b { font-size: 28px; display:block; } .hex span { font-size: 20px; color: var(--muted); }
+  .hex i { display:block; font-style:normal; color: var(--orange); font-weight:800; font-size:18px; }
+  .center-note { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width: 430px; text-align:center; background: rgba(255,255,255,.93); color:#14264a; border-radius: 8px; padding: 14px 18px; font-size: 22px; font-weight: 800; line-height: 1.5; border: 3px solid var(--gold); }
+
+  /* 申訴流程 */
+  .flow { display:grid; grid-template-columns: 1fr 70px 1fr; grid-template-rows: auto 56px auto; gap: 0; margin-top: 22px; align-items:center; }
+  .step { display:flex; gap:20px; align-items:center; }
+  .step h3 { font-size: 30px; } .step p { margin:6px 0 0; font-size: 22px; color:#dfe5f0; line-height:1.5; }
+  .arr { text-align:center; font-size: 40px; color: var(--orange); font-weight:900; }
+  .loopnote { margin-top: 22px; text-align:center; color: var(--gold); font-size: 24px; font-weight:700; }
+
+  /* 引言 */
+  .q { text-align:center; }
+  .q .zh { font-size: 34px; line-height: 1.6; font-weight: 600; }
+  .q .ko { font-size: 40px; font-weight: 800; color: var(--gold); line-height: 1.5; margin-top: 30px; }
+  .q small { display:block; font-size: 22px; color: var(--muted); margin-top: 8px; font-weight:600; }
+
+  /* 問卷 */
+  .qlist { display:flex; flex-direction:column; gap: 14px; margin-top: 18px; }
+  .qrow { display:flex; gap:18px; align-items:center; background: rgba(13,26,48,.75); border: 2px solid var(--line); border-radius: 12px; padding: 12px 22px; font-size: 24px; line-height:1.4; }
+  .qrow b { color: var(--gold); white-space:nowrap; min-width: 150px; }
+  .qrow .n { flex:0 0 38px; height:38px; border-radius:50%; background: var(--orange); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .warn { margin-top: 18px; display:flex; gap:16px; align-items:center; border: 2px solid var(--orange); background: rgba(238,123,48,.15); border-radius: 12px; padding: 14px 22px; font-size: 24px; line-height:1.5; }
+  .warn b { color: var(--orange); }
+
+  /* 四象限 */
+  .quad { position:relative; display:grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 22px; border: 2px solid var(--line); background: rgba(13,26,48,.6); }
+  .quad .cell { padding: 30px 40px; display:flex; gap: 22px; align-items:center; min-height: 230px; box-sizing:border-box; }
+  .quad .cell:nth-child(1), .quad .cell:nth-child(2) { border-bottom: 2px solid var(--line); }
+  .quad .cell:nth-child(odd) { border-right: 2px solid var(--line); }
+  .quad h3 { font-size: 30px; } .quad h3 small { font-size: 20px; color: var(--muted); font-weight:600; }
+  .quad p { margin: 8px 0 0; font-size: 23px; line-height: 1.5; color:#dfe5f0; }
+  .quad-center { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width: 190px; height:190px; border-radius:50%; border: 3px solid var(--gold); background: var(--bg); box-shadow: 0 0 30px rgba(224,178,82,.4); display:flex; align-items:center; justify-content:center; text-align:center; font-size: 21px; font-weight:800; padding: 18px; box-sizing:border-box; line-height:1.4; }
+
+  /* 階梯 */
+  .stairs { display:flex; align-items:flex-end; gap: 18px; height: 470px; margin-top: 14px; }
+  .stairs .st { flex:1; border-top: 6px solid var(--gold); border-left: 6px solid var(--gold); background: rgba(13,26,48,.7); padding: 16px 18px; box-sizing:border-box; }
+  .stairs .st:nth-child(1){ height: 250px; } .stairs .st:nth-child(2){ height: 320px; } .stairs .st:nth-child(3){ height: 390px; } .stairs .st:nth-child(4){ height: 460px; border-color: var(--orange); background: rgba(224,178,82,.16); }
+  .st h3 { font-size: 28px; color: var(--gold); line-height:1.3; } .st h3 small { display:block; font-size: 20px; color: var(--text); font-weight:600; }
+  .st p { font-size: 22px; line-height: 1.55; margin: 12px 0 0; color:#dfe5f0; }
+
+  /* 互動共用 */
+  .live { display:inline-block; background:#ff4757; color:#fff; padding:2px 9px; border-radius:10px; font-size:13px; font-weight:800; animation: pulse 1.5s infinite; vertical-align: middle; margin-left: 6px; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
+  .wc-grid { display:grid; grid-template-columns: 330px 1fr; gap: 20px; height: 470px; margin-top: 14px; }
+  .wc-side { display:flex; flex-direction:column; gap: 12px; min-height:0; }
+  .box { background: var(--panel); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: 14px; }
+  .box .t { font-size: 17px; font-weight: 800; color: var(--gold); margin-bottom: 8px; }
+  #wc-input { width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--line); background: rgba(255,255,255,.08); color:#fff; font-size:18px; box-sizing:border-box; font-family:inherit; outline:none; }
+  .btn { width:100%; margin-top:8px; padding:10px; background: var(--gold); color:#1b2a44; border:none; border-radius:8px; font-weight:800; font-size:18px; cursor:pointer; font-family:inherit; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .chip { font-size:15px; padding:4px 10px; border-radius:14px; border:1px solid var(--line); background: transparent; color: var(--text); cursor:pointer; font-family:inherit; }
+  .chip:hover { background: rgba(224,178,82,.2); }
+  #wc-list { font-size: 16px; overflow-y:auto; flex:1; color:#dfe5f0; }
+  #wc-list div { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.07); }
+  .wc-canvasbox { position:relative; background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:14px; overflow:hidden; }
+  #wc-canvas { width:100%; height:100%; display:block; }
+  #wc-empty { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#6c7c98; font-size:22px; text-align:center; line-height:1.9; pointer-events:none; }
+  .q-hint { font-size: 22px; color: #dfe5f0; line-height: 1.6; margin-top: 8px; }
+  .poll-opts { display:flex; flex-direction:column; gap: 12px; margin-top: 18px; }
+  .poll-btn { width:100%; padding: 14px 20px; background: var(--panel); border: 2px solid rgba(255,255,255,.14); border-radius: 12px; color:#fff; font-size: 24px; cursor:pointer; font-family:inherit; text-align:left; display:flex; align-items:center; gap:16px; }
+  .poll-btn:hover { border-color: var(--gold); }
+  .poll-btn.mine { border-color: var(--orange); background: rgba(238,123,48,.15); }
+  .poll-btn .key { flex:0 0 34px; height:34px; border-radius:50%; border:2px solid var(--gold); color: var(--gold); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; }
+  .poll-btn.mine .key { background: var(--orange); border-color: var(--orange); color:#fff; }
+  .poll-btn .lbl { flex:1; line-height:1.35; }
+  .poll-btn .bar { flex:0 0 170px; height:10px; background: rgba(255,255,255,.12); border-radius:5px; overflow:hidden; }
+  .poll-btn .bar i { display:block; height:100%; width:0; background: var(--gold); transition: width .4s; }
+  .poll-btn .pct { flex:0 0 52px; text-align:right; color: var(--muted); font-size: 20px; }
+  .poll-foot { margin-top: 12px; font-size: 18px; color: var(--muted); text-align:center; }
+  .poll-err { color: var(--orange); }
+
+  /* 總結 */
+  .sum-center { text-align:center; margin-top: 22px; }
+  .sum-center .big { font-size: 46px; font-weight: 900; color: var(--gold); line-height:1.4; }
+  .row3.sum .card { padding: 20px 22px; font-size: 23px; line-height: 1.6; }
+  .row3.sum .card b { color: var(--orange); }
+
+  /* ===== v2 新增 ===== */
+  .ai-bg { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55; z-index:0; pointer-events:none; }
+  .slide > *:not(.ai-bg) { position: relative; z-index: 1; }
+  .slide > .deco, .slide > .banner[style*="absolute"] { position:absolute; }
+  .src { position:absolute !important; left:64px; right:64px; bottom:16px; font-size:14px; color:#7f8ea8; line-height:1.4; }
+  .src a { color:#9fb4d8; }
+  h2.sm { font-size: 40px; }
+
+  /* 對照表 */
+  .cmp { margin-top: 14px; display:grid; grid-template-columns: 190px 1fr 1fr; gap: 8px; font-size: 22px; line-height: 1.4; }
+  .cmp > div { padding: 10px 16px; border-radius: 8px; display:flex; align-items:center; }
+  .cmp .h { font-weight:800; font-size: 22px; }
+  .cmp .h.past { background:#3b4d6b; color:#cfd8e8; justify-content:center; }
+  .cmp .h.now  { background: var(--gold); color:#1b2a44; justify-content:center; }
+  .cmp .k { font-weight:800; color: var(--gold); background: rgba(13,26,48,.8); border:1px solid var(--line); }
+  .cmp .p { background: rgba(59,77,107,.55); color:#cfd8e8; }
+  .cmp .n { background: rgba(224,178,82,.14); border:1px solid var(--line); color:#fff; font-weight:600; }
+
+  /* 移工的一年（滑桿） */
+  .life { display:grid; grid-template-columns: 120px 1fr; gap: 10px 18px; width:100%; }
+  .life .st { font-weight:800; font-size:24px; display:flex; align-items:center; justify-content:center; border-radius:10px; }
+  .life .tx { font-size: 23px; line-height:1.45; padding: 8px 4px; display:flex; align-items:center; }
+  #viz-before .life .st { background: rgba(255,255,255,.12); color:#e1e8f4; }
+  #viz-after  .life .st { background: var(--gold); color:#1b2a44; }
+  .viz-panel.tight { padding: 26px 40px; }
+  .viz-tag { font-size: 30px; font-weight: 900; margin-bottom: 12px; }
+
+  /* 時間軸 */
+  .hz { display:grid; gap: 14px; margin-top: 26px; position:relative; }
+  .hz .nd { background: rgba(13,26,48,.8); border:2px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .hz .nd .d { color: var(--gold); font-weight: 900; font-size: 22px; margin-bottom: 6px; }
+  .hz .nd .t { font-size: 20px; line-height: 1.5; color:#e4e9f3; }
+  .hz .nd.hot { border-color: var(--orange); background: rgba(238,123,48,.14); }
+  .hz .nd.hot .d { color: var(--orange); }
+  .lesson { display:grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; }
+  .lesson .card { padding: 16px 22px; }
+  .lesson .card p { font-size: 22px; margin-top: 4px; }
+  .lesson .card b { color: var(--orange); font-size: 24px; }
+
+  /* 表格（HRDD x HR / 佐證） */
+  .tbl { margin-top: 14px; width:100%; border-collapse: separate; border-spacing: 0 8px; }
+  .tbl th { text-align:left; font-size: 20px; color: var(--gold); padding: 4px 16px; }
+  .tbl td { background: rgba(13,26,48,.78); padding: 11px 16px; font-size: 21px; line-height: 1.45; vertical-align: middle; }
+  .tbl td:first-child { border-radius: 10px 0 0 10px; border:1px solid var(--line); border-right:none; font-weight:800; color: var(--gold); white-space:nowrap; width: 190px; }
+  .tbl td:last-child { border-radius: 0 10px 10px 0; border:1px solid var(--line); border-left:none; }
+  .tbl td:not(:first-child):not(:last-child) { border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .tbl tr.fragment.visible td, .tbl tr.fragment td { }
+  .tbl td b { color: #fff; } .tbl td .tip { color: var(--orange); font-weight: 700; }
+
+  /* 清單 */
+  .chk { display:grid; grid-template-columns: 1fr 1fr; gap: 14px 22px; margin-top: 20px; }
+  .chk .it { display:flex; gap: 16px; align-items:flex-start; background: rgba(13,26,48,.78); border:2px solid var(--line); border-radius: 14px; padding: 16px 20px; }
+  .chk .it .ico { flex:0 0 46px; height:46px; border-radius:50%; background: var(--orange); color:#fff; font-weight:900; display:flex; align-items:center; justify-content:center; font-size: 22px; }
+  .chk .it h3 { font-size: 26px; font-weight: 800; } .chk .it p { margin: 4px 0 0; font-size: 20px; line-height: 1.5; color:#dfe5f0; }
+
+  /* 紅線大數字 */
+  .big4 { display:grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 26px; }
+  .big4 .card { text-align:center; padding: 22px 12px; min-height: 330px; }
+  .big4 .num { font-size: 76px; font-weight: 900; color: var(--gold); line-height: 1.05; }
+  .big4 .num small { font-size: 30px; font-weight: 800; }
+  .big4 h3 { font-size: 25px; margin-top: 10px; }
+  .big4 p { font-size: 19px; line-height: 1.5; }
+  .big4 .card.hot .num { color: var(--orange); }
+
+  /* 來源頁 */
+  .srcs { font-size: 21px; line-height: 1.5; margin-top: 26px; }
+  .srcs li { margin-bottom: 8px; break-inside: avoid; } .srcs a { color:#9fb4d8; word-break: break-all; }
+  .reveal ul { display:block; margin:0; padding-left: 22px; }
+
+  /* ===== v4 ===== */
+  .beam2 { text-align:center; border:2px solid var(--line); border-radius:10px; padding:12px 14px; background: rgba(13,26,48,.8); margin-top:10px; font-size:22px; color:#dfe5f0; }
+  .beam2 b { font-size:28px; color: var(--gold); }
+  .mini4 { display:grid; grid-template-columns: repeat(4,1fr); gap:14px; margin-top:12px; }
+  .mini4 .card { padding: 20px 18px; text-align:center; min-height:170px; }
+  .mini4 .card h3 { font-size: 28px; } .mini4 .card h3 small { display:block; font-size:16px; font-weight:600; color: var(--muted); }
+  .mini4 .card p { font-size: 20px; line-height:1.5; margin-top:8px; }
+  .mini4 .card.hl { background: rgba(224,178,82,.93); border-color: var(--orange); }
+  .mini4 .card.hl h3, .mini4 .card.hl p, .mini4 .card.hl h3 small { color:#1b2a44; }
+  .loop-label { text-align:center; color: var(--gold); font-weight:800; font-size:24px; margin-top:22px; }
+  .loop5 { display:flex; align-items:stretch; gap:6px; margin-top:8px; }
+  .loop5 .st5 { flex:1; border:2px solid #fff; border-radius:14px; padding:18px 6px; text-align:center; background: rgba(13,26,48,.92); }
+  .loop5 .st5 i { display:block; font-style:normal; color: var(--orange); font-weight:800; font-size:17px; }
+  .loop5 .st5 b { display:block; font-size:27px; margin:2px 0; } .loop5 .st5 span { font-size:18px; color: var(--muted); }
+  .loop5 .ar5 { align-self:center; color: var(--orange); font-size:26px; font-weight:900; }
+  .loop-note { margin-top:22px; text-align:center; background: rgba(255,255,255,.93); color:#14264a; border:3px solid var(--gold); border-radius:8px; padding:14px 16px; font-size:24px; font-weight:800; }
+
+  /* 問卷投票 */
+  .qrow .n { flex:0 0 38px; } .qrow b { min-width:140px; } .qrow .qt { flex:1; font-size:22px; }
+  .vt { display:flex; gap:8px; flex:0 0 250px; }
+  .vt button { flex:1; padding:8px 6px; border-radius:10px; border:2px solid rgba(255,255,255,.25); background: rgba(255,255,255,.07); color:#fff; font-size:20px; font-weight:800; cursor:pointer; font-family:inherit; }
+  .vt button i { font-style:normal; color: var(--gold); margin-left:4px; }
+  .vt button[data-v=y]:hover { border-color: var(--gold); } .vt button[data-v=n]:hover { border-color: var(--orange); }
+  .vt button.mine[data-v=y] { background: var(--gold); border-color: var(--gold); color:#1b2a44; } .vt button.mine[data-v=y] i { color:#1b2a44; }
+  .vt button.mine[data-v=n] { background: var(--orange); border-color: var(--orange); }.vt button.mine[data-v=n] i { color:#fff; }
+
+  /* 案例頁 */
+  ul.facts { list-style:none; padding:0 !important; margin:8px 0 0 !important; }
+  ul.facts li { font-size: 21px; line-height: 1.55; margin-bottom: 8px; padding-left: 0; }
+  ul.facts li b { color: var(--gold); }
+  .play-btn { font-family:inherit; font-size: 26px; font-weight: 900; padding: 12px 34px; border-radius: 40px; border: 3px solid var(--gold); background: linear-gradient(#ee7b30,#d96a22); color:#fff; cursor:pointer; box-shadow: 0 0 22px rgba(238,123,48,.5); }
+  .play-btn:hover { filter: brightness(1.1); }
+  .play-btn kbd { background: rgba(0,0,0,.3); border-radius: 6px; padding: 0 10px; }
+
+  </style>
+<link rel="stylesheet" href="story.css" />
+</head>
+<body>
+
+<!-- ===== SVG 圖標庫 ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22"/><ellipse cx="32" cy="32" rx="10" ry="22"/><line x1="10" y1="32" x2="54" y2="32"/><path d="M14 19H50M14 45H50"/><path d="M24 56h16M32 54v-2"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 64 64"><circle cx="30" cy="32" r="21"/><path d="M40 22L34 35 21 42 28 29Z"/><circle cx="30" cy="32" r="2"/><circle cx="50" cy="50" r="6"/><path d="M50 41v3M50 56v3M41 50h3M56 50h3"/></symbol>
+    <symbol id="i-gavel" viewBox="0 0 64 64"><rect x="14" y="10" width="26" height="12" rx="2" transform="rotate(35 27 16)"/><path d="M31 24L50 46"/><path d="M34 56h24"/><path d="M8 40l2 4M5 33l3 1M14 46l-1 4"/></symbol>
+    <symbol id="i-passport" viewBox="0 0 64 64"><rect x="14" y="8" width="36" height="48" rx="4"/><circle cx="32" cy="26" r="9"/><ellipse cx="32" cy="26" rx="4" ry="9"/><path d="M22 44h20M22 50h14"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 64 64"><circle cx="30" cy="32" r="20"/><path d="M30 18v14l9 6"/><rect x="40" y="38" width="18" height="18" rx="3"/><path d="M40 44h18M46 36v4M52 36v4"/></symbol>
+    <symbol id="i-contract" viewBox="0 0 64 64"><path d="M16 8h26l8 8v40H16z"/><path d="M42 8v8h8M22 24h20M22 32h20M22 40h12"/><path d="M36 50l4 4 8-9"/></symbol>
+    <symbol id="i-helmet" viewBox="0 0 64 64"><path d="M12 42a20 20 0 0 1 40 0z"/><path d="M8 46h48M32 22v20M26 22l-4 4M38 22l4 4"/><path d="M24 52h16"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 64 64"><rect x="12" y="28" width="26" height="24" rx="4"/><path d="M18 28v-6a7 7 0 0 1 14 0v6M25 38v6"/><path d="M40 16h16v12H46l-6 6z"/></symbol>
+    <symbol id="i-search" viewBox="0 0 64 64"><path d="M14 8h24l8 8v32H14z"/><circle cx="36" cy="38" r="9"/><path d="M43 45l9 9M20 22h14M20 30h8"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 64 64"><path d="M32 10v40M20 54h24M14 20h36"/><path d="M14 20L6 36h16zM50 20l-8 16h16z"/><path d="M6 36a8 5 0 0 0 16 0M42 36a8 5 0 0 0 16 0"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 64 64"><path d="M32 8l20 7v15c0 13-9 22-20 26-11-4-20-13-20-26V15z"/><path d="M24 31l6 6 11-12"/></symbol>
+  </defs>
+</svg>
+
+<div class="reveal">
+<div class="slides">
+
+<!-- 1 封面 -->
+<section data-background-gradient="radial-gradient(ellipse at 75% 80%, #23406e 0%, #12233f 55%, #0b1830 100%)">
+  <div class="slide cover">
+    <img class="ai-bg" src="images/cover.jpg" alt="" onerror="this.remove()" style="left:auto;right:0;width:80%;opacity:.95;-webkit-mask-image:linear-gradient(to right,transparent,#000 30%);mask-image:linear-gradient(to right,transparent,#000 30%)">
+    <h1>供應鏈中的企業<span class="gold">人權管理</span></h1>
+    <div class="sub">從國際規範到內部整合：HR 團隊的實戰 <span class="gold">治理藍圖</span></div>
+    <svg class="deco" viewBox="0 0 400 360" fill="none" stroke="#e0b252" stroke-width="3" stroke-linejoin="round">
+      <g transform="translate(230 210)"><circle r="78" fill="rgba(224,178,82,.18)"/><circle r="30"/><g stroke-width="14" stroke-dasharray="14 15.7"><circle r="88" stroke="#e0b252" opacity=".9"/></g></g>
+      <g transform="translate(100 260)"><circle r="46" fill="rgba(224,178,82,.12)"/><circle r="16"/><g stroke-width="10" stroke-dasharray="10 12"><circle r="52" opacity=".9"/></g></g>
+      <rect x="40" y="60" width="62" height="62" rx="6" fill="rgba(224,178,82,.2)"/>
+      <rect x="150" y="20" width="62" height="62" rx="6" fill="rgba(238,123,48,.35)" stroke="#ee7b30"/>
+      <rect x="300" y="70" width="62" height="62" rx="6" fill="rgba(224,178,82,.2)"/>
+      <path d="M102 91H150M212 51L300 101" stroke="#ee7b30"/><path d="M130 122L120 230M330 132L300 190" stroke="#ee7b30" stroke-dasharray="6 6"/>
+    </svg>
+  </div>
+</section>
+
+<!-- 2 破冰：文字雲 -->
+<section id="slide-wordcloud">
+  <div class="slide">
+    <h2>你收過客戶寄來的<span class="gold">「人權問卷」</span>嗎？</h2>
+    <div class="q-hint">收過的人：你覺得問卷該問什麼？　沒收過的人：如果由你設計，這份問卷應該具備什麼內容？</div>
+    <div class="wc-grid" data-prevent-swipe>
+      <div class="wc-side">
+        <div class="box">
+          <div class="t">輸入你的答案（也可點下方關鍵詞）</div>
+          <input id="wc-input" type="text" placeholder="例如：申訴管道" maxlength="20" />
+          <button id="wc-btn" class="btn">送出 ↵</button>
+          <div class="chips" id="wc-chips"></div>
+        </div>
+        <div class="box" style="flex:1; min-height:0; display:flex; flex-direction:column;">
+          <div class="t">熱門答案<span class="live">LIVE</span></div>
+          <div id="wc-list"></div>
+          <div style="margin-top:6px;font-size:15px;color:#7f8ea8;border-top:1px solid rgba(255,255,255,.08);padding-top:6px;">總提交 <b id="wc-total" class="orange">0</b>　不同答案 <b id="wc-unique" class="gold">0</b></div>
+        </div>
+      </div>
+      <div class="wc-canvasbox">
+        <canvas id="wc-canvas"></canvas>
+        <div id="wc-empty">輸入第一個答案<br>文字雲就會出現 ✨</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 過去 vs 現在：一張表看懂 -->
+<section>
+  <div class="slide">
+    <h2 class="sm">過去 vs 現在：供應商管理到底<span class="gold">哪裡不一樣</span>？</h2>
+    <div class="cmp">
+      <div></div><div class="h past">過去：只看商業</div><div class="h now">現在：連人一起看</div>
+
+      <div class="k">誰在看你？</div><div class="p">客戶看品質、交期、價格</div><div class="n fragment" data-fragment-index="1">客戶、品牌、投資人、政府，都在看「人」</div>
+      <div class="k">看什麼？</div><div class="p">財報、報價、交期</div><div class="n fragment" data-fragment-index="1">人權自評問卷＋第三方查廠稽核</div>
+      <div class="k">移工招募費</div><div class="p">仲介費由移工自付，視為「行情」</div><div class="n fragment" data-fragment-index="1">零招聘費：雇主負擔；已收須回溯返還</div>
+      <div class="k">加班工時</div><div class="p">趕單加班是常態，只要沒被勞檢</div><div class="n fragment" data-fragment-index="1">每週含加班 ≤ 60 小時、7 天休 1 日、加班須自願</div>
+      <div class="k">員工有意見</div><div class="p">跟主管講，沒有正式紀錄</div><div class="n fragment" data-fragment-index="1">保密、可追蹤，有調查與補救的申訴機制</div>
+      <div class="k">出事的代價</div><div class="p">罰款、勞檢</div><div class="n fragment" data-fragment-index="1">丟單、被客戶停止往來、產品被禁止進口</div>
+      <div class="k">HR 的角色</div><div class="p">行政與法遵，在後台</div><div class="n fragment" data-fragment-index="1">被客戶點名、要拿出證據的前線</div>
+    </div>
+    <div class="src">依教材與下列來源整理：RBA 行為準則（工時、招募費）、台灣媒體對巨大 WRO 案之報導。詳見最後一頁「資料來源」。</div>
+  </div>
+</section>
+
+<!-- 4 一位移工的一年（滑桿） -->
+<section id="slide-viz" data-prevent-swipe>
+  <div class="slide">
+    <h2 class="sm">用一位移工的「一年」，看<span class="gold">典範轉移</span></h2>
+    <div class="viz-wrap" style="height:440px;margin-top:14px;">
+      <div class="viz-panel tight" id="viz-before">
+        <div class="viz-tag muted">過去的做法（常見灰色地帶）</div>
+        <div class="life">
+          <div class="st">招募</div><div class="tx">國內外仲介費合計動輒十幾萬元（媒體報導平均約 15–20 萬），由薪水逐月扣</div>
+          <div class="st">入職</div><div class="tx">護照由公司「代為保管」，合約看不懂，簽了再說</div>
+          <div class="st">工作</div><div class="tx">旺季連上好幾週、加班靠口頭約定，薪資怎麼算說不清</div>
+          <div class="st">住宿</div><div class="tx">多人擠一間，水電、伙食、住宿費想扣多少就扣</div>
+          <div class="st">申訴</div><div class="tx">有意見怕被減薪、被遣返，只好忍耐</div>
+        </div>
+      </div>
+      <div class="viz-panel tight" id="viz-after">
+        <div class="viz-tag gold">現在的要求（客戶與法規共同語言）</div>
+        <div class="life">
+          <div class="st">招募</div><div class="tx">招募費用由雇主負擔；若發現已收取，須回溯返還（RBA：90 天內）</div>
+          <div class="st">入職</div><div class="tx">證件本人持有；用母語說明合約、薪資與扣款項目</div>
+          <div class="st">工作</div><div class="tx">每週含加班 ≤ 60 小時、每 7 天休 1 日；加班自願並有簽認紀錄</div>
+          <div class="st">住宿</div><div class="tx">宿舍有標準與稽核，扣款項目公開、合理、可核對</div>
+          <div class="st">申訴</div><div class="tx">母語專線、可匿名、不報復，有調查、有補救、有回覆</div>
+        </div>
+      </div>
+      <div id="viz-divider"></div>
+      <div class="viz-label" id="viz-l1" style="left:14px">過去</div>
+      <div class="viz-label" id="viz-l2" style="right:14px;background:var(--orange);">現在</div>
+    </div>
+    <input id="viz-slider" type="range" min="0" max="100" value="0" aria-label="拖曳比較過去與現在" />
+    <div class="muted" style="text-align:center;font-size:18px;">← 拖曳滑桿：同樣五個環節，過去與現在差在哪 →</div>
+  </div>
+</section>
+
+<!-- 4 國際法規海嘯 -->
+<section>
+  <div class="slide">
+    <img class="ai-bg" src="images/global.jpg" alt="" onerror="this.remove()">
+    <h2>全球視角：不可逆的國際法規海嘯</h2>
+    <div class="row3">
+      <div class="card">
+        <div class="head"><svg class="ic"><use href="#i-globe"/></svg><h3>聯合國<br>UNGPs</h3></div>
+        <div style="margin-top:12px"><span class="sub-tag">基礎</span></div>
+        <p>要求企業必須將員工處境與權益納入基本人權。</p>
+      </div>
+      <div class="card">
+        <div class="head"><svg class="ic"><use href="#i-compass"/></svg><h3>OECD<br>準則</h3></div>
+        <div style="margin-top:12px"><span class="sub-tag">方法</span></div>
+        <p>提供企業實務操作的具體指導方向。</p>
+      </div>
+      <div class="card hot">
+        <div class="head"><svg class="ic" style="stroke:var(--orange)"><use href="#i-gavel"/></svg><h3>歐盟<br>CSDDD</h3></div>
+        <div style="margin-top:12px"><span class="sub-tag o">法規</span></div>
+        <p>2024 年正式通過，具備實質法律強制力。<span class="tip" style="color:var(--orange)">2026/3 Omnibus I 生效：範圍與時程已調整，須持續追蹤。</span></p>
+      </div>
+    </div>
+    <div class="banner fragment" style="margin-top:34px; font-size:28px; padding:20px 24px;">台灣現況：先規範營收 500 億大企業，現正快速向下游供應鏈蔓延！</div>
+  </div>
+</section>
+
+<!-- 台灣現況 -->
+<section>
+  <div class="slide">
+    <h2>台灣現況：從「國家行動計畫」到<span class="gold">供應鏈方案</span></h2>
+    <div class="hz" style="grid-template-columns:repeat(3,1fr);">
+      <div class="nd"><div class="d">2020 / 12</div><div class="t">行政院公布《企業與人權國家行動計畫》，台灣是亞洲第二個提出的國家。</div></div>
+      <div class="nd"><div class="d">2024</div><div class="t">經濟部規劃《台灣供應鏈企業尊重人權指引》，並表示後續將研議立法強制盡職調查。</div></div>
+      <div class="nd hot"><div class="d">2025 / 1 / 20</div><div class="t">行政院人權保障推動小組決議：由經濟部規劃「臺灣企業供應鏈尊重人權方案」，具規模企業率先實施。</div></div>
+    </div>
+    <div class="card" style="margin-top:22px;">
+      <h3 class="gold">率先實施的對象與內容（依政府文件）</h3>
+      <p><b>對象：</b>製造業、前一年度營業額達新臺幣 500 億元的上市櫃公司。<b>範圍：</b>自身業務與直接供應商。</p>
+      <p><b>流程：</b>制定人權政策 → 評估負面影響 → 採取行動 → 追蹤成效 → 溝通揭露 → 建立內部申訴機制。</p>
+    </div>
+    <div class="banner fragment" style="margin-top:18px;font-size:22px;">對人資的意思：大企業先動，下一步就是把要求寫進「給供應商的問卷與合約」。</div>
+    <div class="src">提醒：部分為草案或預告性質，施行日期與細節請以行政院、經濟部正式公告為準。來源見最後一頁。</div>
+  </div>
+</section>
+
+<!-- 案例：巨大 -->
+<section>
+  <div class="slide">
+    <img class="ai-bg" src="images/giant.jpg" alt="" onerror="this.remove()">
+    <h2 class="sm">真實案例①：有政策，<span class="gold">不等於有證據</span>（巨大 WRO）</h2>
+    <div class="hz" style="grid-template-columns:repeat(5,1fr);margin-top:18px;">
+      <div class="nd"><div class="d">2025 / 1 / 1</div><div class="t">對新進移工落實「零招聘費」</div></div>
+      <div class="nd hot"><div class="d">2025 / 9 / 24</div><div class="t">美國海關（CBP）對其台灣製造產品發布暫扣令（WRO），事涉移工強迫勞動疑慮</div></div>
+      <div class="nd"><div class="d">2025 / 10 中</div><div class="t">擴大適用所有現職移工，開始返還費用</div></div>
+      <div class="nd"><div class="d">2025 / 12 / 1</div><div class="t">完成現職移工的第二階段費用返還</div></div>
+      <div class="nd"><div class="d">2026 初</div><div class="t">啟動第三階段：補償 WRO 前兩年內離職者，並提交撤銷申訴與改善行動計畫（CAP）</div></div>
+    </div>
+    <div class="lesson">
+      <div class="card fragment" data-fragment-index="1"><b>教訓①：</b><p>先宣布政策還不夠，客戶與海關要看的是「已付多少、退了多少、誰簽收」的紀錄。</p></div>
+      <div class="card fragment" data-fragment-index="1"><b>教訓②：</b><p>補償要有明確範圍與追溯期。報導指其追溯期超過部分國際實務常見的約 6 個月。</p></div>
+    </div>
+    <div class="src">依媒體報導與公司說明整理（截至查得最新報導為 2026/3，撤銷結果請另行查證）。指控與改善成效仍待 CBP 與第三方稽核確認。</div>
+  </div>
+</section>
+
+<!-- 案例：明昌國際 -->
+<section id="slide-case2">
+  <div class="slide">
+    <h2 class="sm">真實案例②：明昌國際——客戶查廠，<span class="gold">通知的是人資主管</span></h2>
+    <div class="row3" style="grid-template-columns:1.25fr 1fr;gap:24px;margin-top:18px;">
+      <div class="card" style="padding:20px 24px;">
+        <h3>發生了什麼事</h3>
+        <ul class="facts">
+          <li><b>公司：</b>明昌國際（成立於 1976 年，生產工具箱櫃與醫護推車），約 600 名員工，其中約 100 名是移工。</li>
+          <li><b>查廠：</b>疫情爆發約半年後，北美客戶家得寶（Home Depot）來查廠，<span class="orange">沒有通過</span>。</li>
+          <li><b>轉折：</b>以往查環境與安全，這次通知的是<span class="gold">人資主管</span>——移工每月自付仲介服務費，違反客戶最新的 CSR 規定。</li>
+          <li><b>改變：</b>2021 年起改由公司負擔仲介費；報導指移工續聘率翻了 2 倍。</li>
+        </ul>
+      </div>
+      <div class="card hot" style="padding:20px 24px;">
+        <h3>客戶查廠時，會問人資的 5 件事</h3>
+        <p style="font-size:21px;line-height:1.65;">① 仲介費誰付？有收據嗎？<br>② 護照、居留證誰保管？<br>③ 工時紀錄對得上薪資單嗎？<br>④ 員工申訴怎麼處理、處理多久？<br>⑤ 合約與規定，員工看得懂嗎？</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px;"><button id="story-btn" class="play-btn">▶ 播放 15 秒卡通短片　（按 <kbd>V</kbd> 鍵・有旁白與對話）</button></div>
+    <div class="src">案例依《天下雜誌》報導整理（<a href="https://www.cw.com.tw/article/5128875" target="_blank">原文</a>，全文需訂閱，細節以原文為準）；5 題為依 RBA 準則整理的人資端檢核問題；動畫為依報導情節改編的示意。</div>
+  </div>
+</section>
+
+<!-- 5 破除迷思 -->
+<section>
+  <div class="slide">
+    <h2 style="text-align:center">破除迷思：我們<span class="gold">不是從零開始</span></h2>
+    <div class="temple">
+      <div class="roof"><span>企業人權管理治理機制<br><small style="font-size:20px">(尊重人權 + 盡職管理)</small></span></div>
+      <div class="cols">
+        <div class="col">勞基法<br>合規</div>
+        <div class="col">職安衛<br>(OSH)<br>系統</div>
+        <div class="col">員工<br>申訴<br>管道</div>
+        <div class="col">教育<br>訓練</div>
+        <div class="col">供應商<br>管理<br><small style="font-size:18px;display:block">(內部稽核)</small></div>
+      </div>
+      <div class="base"></div>
+      <div class="note fragment">企業人權不是另起爐灶！企業是由人組成，給予義務也要給予應有權利。<br>將我們現有的人資工具，無縫整合進這套「有意識的治理邏輯」中。</div>
+    </div>
+  </div>
+</section>
+
+<!-- HRDD：架構＋循環（合併） -->
+<section data-background-gradient="radial-gradient(ellipse at 50% 60%, #22385f 0%, #12233f 62%, #0b1830 100%)">
+  <div class="slide">
+    <img class="ai-bg" src="images/cycle.jpg" alt="" onerror="this.remove()" style="opacity:.28">
+    <h2 class="sm">核心解碼：什麼是 <span class="gold">HRDD</span>（人權盡職調查）？</h2>
+    <div class="beam2"><b>公司治理（董事會）</b>　<span>呼應外部法規與承諾</span></div>
+    <div class="mini4">
+      <div class="card"><h3>人權政策 <small>Policy</small></h3><p>公司的公開承諾與最高指導原則。</p></div>
+      <div class="card"><h3>治理制度 <small>Governance</small></h3><p>權責劃分，明確界定「誰來負責」。</p></div>
+      <div class="card"><h3>利害關係人 <small>Stakeholders</small></h3><p>影響了誰？誰在乎？（員工、供應商、社區）</p></div>
+      <div class="card hl"><h3>持續改善 <small>Improvement</small></h3><p>完美的制度不存在，重要的是展現進步的軌跡。</p></div>
+    </div>
+    <div class="loop-label">▼ 這四塊靠一個「動態管理循環」運轉</div>
+    <div class="loop5">
+      <div class="st5"><i>①</i><b>風險辨識</b><span>找出潛在的地雷</span></div><div class="ar5">➜</div>
+      <div class="st5"><i>②</i><b>預防</b><span>建立防護網</span></div><div class="ar5">➜</div>
+      <div class="st5"><i>③</i><b>減輕損害</b><span>若發生，降到最低</span></div><div class="ar5">➜</div>
+      <div class="st5"><i>④</i><b>追蹤有效性</b><span>措施到底有沒有用？</span></div><div class="ar5">➜</div>
+      <div class="st5"><i>⑤</i><b>溝通與說明</b><span>對內外透明公開</span></div>
+    </div>
+    <div class="loop-note">↺ 管理不是一次性的勾選作業，而是一個持續監測、修正與進化的生命週期。</div>
+  </div>
+</section>
+
+<!-- HRDD 五步驟 x 人資實務 -->
+<section>
+  <div class="slide">
+    <h2 class="sm">HRDD 五步驟，換成<span class="gold">人資的日常動作</span></h2>
+    <table class="tbl">
+      <tr><th>步驟</th><th>人資可以這樣做（舉例）</th></tr>
+      <tr><td>① 風險辨識</td><td>盤點移工人數與國籍、仲介清單、宿舍、各部門月加班時數 → 做成<b>風險熱度表</b></td></tr>
+      <tr><td>② 預防</td><td>仲介合約加入「零收費、不扣證件」條款；入職 SOP 用<b>母語</b>說明合約；加班需本人簽認</td></tr>
+      <tr><td>③ 減輕損害</td><td>發現移工已付費 → 啟動<b>回溯返還</b>流程（RBA 要求 90 天內）；超時部門限期改善</td></tr>
+      <tr><td>④ 追蹤有效性</td><td>每月看 3 個數字：<b>超過 60 小時人次、申訴件數與結案天數、移工離職率</b></td></tr>
+      <tr><td>⑤ 溝通與說明</td><td>多語言公告欄與入職說明；年度向管理階層與客戶提出<b>人權管理摘要</b></td></tr>
+    </table>
+    <div class="src">範例為依 HRDD 流程與 RBA 準則整理的實務做法；數字門檻請依客戶與最新版準則為準。</div>
+  </div>
+</section>
+
+<!-- 8 申訴機制 -->
+<section>
+  <div class="slide">
+    <h2>關鍵機制：讓受害者<span class="gold">「有苦可訴」</span></h2>
+    <div class="flow">
+      <div class="card step"><svg class="ic big"><use href="#i-lock"/></svg><div><h3>① 暢通管道 <small class="muted" style="font-size:18px">Channel</small></h3><p>建立安全、保密、可信任的申訴機制。</p></div></div>
+      <div class="arr">➜</div>
+      <div class="card step"><svg class="ic big"><use href="#i-search"/></svg><div><h3>② 成立調查 <small class="muted" style="font-size:18px">Investigate</small></h3><p>組織中立的調查小組釐清事件真相。</p></div></div>
+      <div class="arr" style="transform:rotate(-90deg);grid-column:1;">➜</div>
+      <div></div>
+      <div class="arr" style="transform:rotate(90deg);grid-column:3;">➜</div>
+      <div class="card step"><svg class="ic big"><use href="#i-shield"/></svg><div><h3>④ 回饋防堵 <small class="muted" style="font-size:18px">Feedback</small></h3><p>回頭提醒公司調整制度，防止將來發生同樣悲劇。</p></div></div>
+      <div class="arr" style="transform:rotate(180deg);">➜</div>
+      <div class="card step"><svg class="ic big"><use href="#i-scale"/></svg><div><h3>③ 做出處置 <small class="muted" style="font-size:18px">Action</small></h3><p>依據調查結果進行公正裁決與補救。</p></div></div>
+    </div>
+    <div class="loopnote fragment">↺ 持續改善：回饋再回到暢通管道，形成閉環</div>
+  </div>
+</section>
+
+<!-- 申訴機制設計清單 -->
+<section>
+  <div class="slide">
+    <h2>讓申訴機制「真的有人用」：<span class="gold">設計清單</span></h2>
+    <div class="chk">
+      <div class="it"><div class="ico">1</div><div><h3>用母語</h3><p>印尼、越南、泰國、菲律賓…依實際移工國籍提供多語說明與表單。</p></div></div>
+      <div class="it"><div class="ico">2</div><div><h3>可匿名、可保密</h3><p>提供專線、LINE 或信箱，讓人不必在主管面前開口。</p></div></div>
+      <div class="it"><div class="ico">3</div><div><h3>不報復承諾</h3><p>白紙黑字寫明：申訴不會被減薪、調班或遣返，並實際追蹤。</p></div></div>
+      <div class="it"><div class="ico">4</div><div><h3>受理與結案有時限</h3><p>例如：3 個工作天內回覆受理、30 天內結案（時限為建議，可依公司調整）。</p></div></div>
+      <div class="it"><div class="ico">5</div><div><h3>調查要中立</h3><p>由人資或獨立小組處理，不由被申訴的直屬主管調查。</p></div></div>
+      <div class="it"><div class="ico">6</div><div><h3>結果要回報、要回饋</h3><p>讓申訴者知道結果；案件趨勢回報管理階層，推動制度修正。</p></div></div>
+    </div>
+    <div class="src">依教材「暢通管道→成立調查→做出處置→回饋防堵」展開；時限與做法為實務建議。</div>
+  </div>
+</section>
+
+<!-- 9 引言 -->
+<section data-background-gradient="radial-gradient(ellipse at 50% 40%, #22385f 0%, #12233f 65%, #0b1830 100%)">
+  <div class="slide">
+    <img class="ai-bg" src="images/quote.jpg" alt="" onerror="this.remove()">
+    <h2>溝通的威力：制度存在的意義</h2>
+    <div class="q" style="margin-top:34px;">
+      <div class="zh">「政府無論建立了多麼好的制度，如果國民不知道，<br>那個制度就和假的一樣。」<small>— 韓國前總統 李明博</small></div>
+      <div class="ko fragment">「국민이 모르면 없는 정책이나 같다」<br><span style="font-size:32px;color:#f2c97a">（國民如果不知道，這項政策就等同於不存在）</span><small>— 韓國前總統 朴槿惠</small></div>
+    </div>
+    <div class="banner fragment" style="position:absolute;left:64px;right:64px;bottom:44px;border-color:var(--gold);background:rgba(13,26,48,.8);font-size:24px;">政策絕對不能只寫在紙上。企業必須確保員工與利害關係人真正「知道」並「會用」申訴與人權機制。</div>
+  </div>
+</section>
+
+<!-- 客戶問卷 + 現場投票 -->
+<section id="slide-qa" data-prevent-swipe>
+  <div class="slide">
+    <h2 class="sm">商業現實：客戶的人權問卷<span class="gold">到底想看什麼？</span></h2>
+    <div class="q-hint" style="margin-top:2px;">請針對每一題投票：我們公司目前「<b class="gold">有</b>」還是「<b class="orange">沒有</b>」？</div>
+    <div class="qlist" style="margin-top:12px;gap:10px;">
+      <div class="qrow"><span class="n">1</span><b>政策與究責</b><span class="qt">有人權政策嗎？誰是專責窗口？</span><span class="vt" data-q="1"><button data-v="y">有 <i>0</i></button><button data-v="n">沒有 <i>0</i></button></span></div>
+      <div class="qrow"><span class="n">2</span><b>風險管理</b><span class="qt">如何辨識風險？如何管理你的供應商？</span><span class="vt" data-q="2"><button data-v="y">有 <i>0</i></button><button data-v="n">沒有 <i>0</i></button></span></div>
+      <div class="qrow"><span class="n">3</span><b>救濟機制</b><span class="qt">員工如何申訴？機制是否真的有效？</span><span class="vt" data-q="3"><button data-v="y">有 <i>0</i></button><button data-v="n">沒有 <i>0</i></button></span></div>
+      <div class="qrow"><span class="n">4</span><b>透明度</b><span class="qt">利害關係人是否知情？</span><span class="vt" data-q="4"><button data-v="y">有 <i>0</i></button><button data-v="n">沒有 <i>0</i></button></span></div>
+      <div class="qrow"><span class="n">5</span><b>動態管理</b><span class="qt">有無持續改善的檢討紀錄？</span><span class="vt" data-q="5"><button data-v="y">有 <i>0</i></button><button data-v="n">沒有 <i>0</i></button></span></div>
+    </div>
+    <div class="warn fragment" style="margin-top:14px;"><span style="font-size:36px">⚠️</span><div><b>小心且有意識地填寫！</b>中心廠以此作為供應商風險管理的工具。缺乏制度佐證的亂勾選，將導致嚴重的「丟單風險」。</div></div>
+  </div>
+</section>
+
+<!-- 問卷 x 佐證文件 -->
+<section>
+  <div class="slide">
+    <h2 class="sm">填問卷前：每一題都要有<span class="gold">「佐證文件」</span></h2>
+    <table class="tbl">
+      <tr><th>問卷在問</th><th>你要能拿出什麼（人資可準備）</th></tr>
+      <tr><td>政策與究責</td><td>經高層簽核的<b>人權政策</b>、公告截圖、專責窗口名單與職掌</td></tr>
+      <tr><td>風險管理</td><td><b>風險盤點表</b>、供應商（含仲介、外包）名單與評核紀錄、簽署的行為準則</td></tr>
+      <tr><td>救濟機制</td><td>申訴流程圖、<b>案件登錄表與結案單</b>（去識別化）、處理時效統計</td></tr>
+      <tr><td>透明度</td><td>多語公告照片、教育訓練<b>簽到表與教材</b>、入職說明紀錄</td></tr>
+      <tr><td>動態管理</td><td>管理審查會議紀錄、年度改善計畫與<b>前後期指標比較</b></td></tr>
+    </table>
+    <div class="banner fragment" style="margin-top:12px;font-size:22px;">原則：寧可誠實勾「部分符合」並附改善計畫，也不要勾「完全符合」卻拿不出文件。</div>
+    <div class="src">佐證項目為依客戶問卷常見構面與 HRDD 流程整理的建議清單。</div>
+  </div>
+</section>
+
+<!-- 11 熱點 -->
+<section>
+  <div class="slide">
+    <h2 style="text-align:center">聚焦熱點：我們該優先盤點<span class="gold">哪些高風險議題</span>？</h2>
+    <div class="quad">
+      <div class="cell"><svg class="ic big"><use href="#i-passport"/></svg><div><h3>移工權益 <small>Migrant Workers</small></h3><p>仲介費負擔、住宿與生活條件。</p></div></div>
+      <div class="cell"><svg class="ic big"><use href="#i-clock"/></svg><div><h3>工時管理 <small>Working Hours</small></h3><p>超時工作、是否存在強迫勞動疑慮。</p></div></div>
+      <div class="cell"><svg class="ic big"><use href="#i-contract"/></svg><div><h3>外包商管理 <small>Contractors</small></h3><p>承攬商與駐廠人員的基本人權狀況。</p></div></div>
+      <div class="cell"><svg class="ic big"><use href="#i-helmet"/></svg><div><h3>環安衛 <small>EHS</small></h3><p>職場健康、安全防護與工作環境。</p></div></div>
+      <div class="quad-center">啟動人權管理的第一步：精準辨識主要風險。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 紅線：人資要會背的四個規則 -->
+<section>
+  <div class="slide">
+    <h2 class="sm">人資一定要會背的<span class="gold">四條紅線</span>（RBA 行為準則）</h2>
+    <div class="big4">
+      <div class="card"><div class="num">60<small> 小時</small></div><h3>每週工時上限</h3><p>含加班；緊急或特殊情況例外。加班必須是自願的。</p></div>
+      <div class="card"><div class="num">1<small> 日 / 7 日</small></div><h3>至少休息 1 天</h3><p>每 7 天至少休 1 日，連續工作不得超過 6 天（豁免人員另論）。</p></div>
+      <div class="card hot"><div class="num">0<small> 元</small></div><h3>招募費不由勞工付</h3><p>即使當地法律允許也不行。若發現已收，須在 90 天內返還。</p></div>
+      <div class="card hot"><div class="num">✕</div><h3>不得扣留證件</h3><p>不得持有勞工的原始身分證件。亦不得要求押金或強制儲蓄。</p></div>
+    </div>
+    <div class="banner fragment" style="margin-top:22px;font-size:22px;">這四條，加上國際勞工組織（ILO）列出的 11 項強迫勞動指標，是客戶查廠最常對照的底線。</div>
+    <div class="src">依 RBA 行為準則（工時、招募費、強迫勞動）整理，請以最新版（v8.0, 2024）原文為準。</div>
+  </div>
+</section>
+
+<!-- 12 行動方案 -->
+<section>
+  <div class="slide">
+    <h2>行動方案：HR 團隊的下一步 <span class="gold">(How to Start)</span></h2>
+    <div class="stairs">
+      <div class="st"><h3>Step 1：盤點整合<small>(Audit)</small></h3><p>盤點現有資源（勞基、職安、申訴、訓練），不從零開始。</p></div>
+      <div class="st"><h3>Step 2：建立政策<small>(Policy)</small></h3><p>起草企業人權公開承諾，界定適用範圍，並指定專責窗口。</p></div>
+      <div class="st"><h3>Step 3：辨識熱點<small>(Identify)</small></h3><p>針對移工、工時、外包等高風險區域進行優先鑑別。</p></div>
+      <div class="st fragment"><h3>Step 4：持續改善<small>(Improve)</small></h3><p>善用申訴管道追蹤治標，加強對內溝通，並定時檢討成效。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 投票：目前在哪一步 -->
+<section id="slide-poll-step" data-prevent-swipe>
+  <div class="slide">
+    <img class="ai-bg" src="images/vote.jpg" alt="" onerror="this.remove()" style="opacity:.2">
+    <h2>投票①：我們現在處於<span class="gold">哪一步</span>？</h2>
+    <div class="q-hint">選最接近公司目前狀況的一項（可重新選擇）</div>
+    <div class="poll-opts" id="poll-step-opts"></div>
+    <div class="poll-foot">已投票：<b id="poll-step-total">0</b> 人 <span id="poll-step-err" class="poll-err"></span></div>
+  </div>
+</section>
+
+<!-- 14 投票：後續怎麼做 -->
+<section id="slide-poll-next" data-prevent-swipe>
+  <div class="slide">
+    <img class="ai-bg" src="images/vote.jpg" alt="" onerror="this.remove()" style="opacity:.2">
+    <h2>投票②：接下來<span class="gold">最優先</span>該做什麼？</h2>
+    <div class="q-hint">請選一項你認為最值得先動手的事</div>
+    <div class="poll-opts" id="poll-next-opts"></div>
+    <div class="poll-foot">已投票：<b id="poll-next-total">0</b> 人 <span id="poll-next-err" class="poll-err"></span></div>
+  </div>
+</section>
+
+<!-- 15 總結 -->
+<section data-background-gradient="radial-gradient(ellipse at 50% 30%, #2a4272 0%, #12233f 60%, #0b1830 100%)">
+  <div class="slide">
+    <img class="ai-bg" src="images/ending.jpg" alt="" onerror="this.remove()">
+    <h2 style="text-align:center">總結：人權是治理，更是<span class="gold">企業韌性</span></h2>
+    <div class="sum-center">
+      <svg class="ic" style="width:110px;height:110px"><use href="#i-shield"/></svg>
+      <div class="big">證明公司有條有理，<br>展現對人的真正尊重。</div>
+    </div>
+    <div class="row3 sum" style="margin-top:26px">
+      <div class="card"><b>✔ 不是新要求：</b>而是將現有管理機制升級為「治理藍圖」。</div>
+      <div class="card"><b>✔ 治理更扎實：</b>將人權寫入既有文件，一步步建立保護企業的護城河。</div>
+      <div class="card"><b>✔ 持續改善：</b>完美的制度不存在，不斷修正與傾聽，才是真正的 ESG 精神。</div>
+    </div>
+    <div class="banner fragment" style="margin-top:22px;border-color:var(--gold);background:rgba(13,26,48,.8);font-size:23px;">妥善回答問卷，我們正在建立一個具備國際競爭力的永續供應鏈！</div>
+  </div>
+</section>
+
+</div>
+</div>
+
+<div id="story" aria-hidden="true"><div class="stage"></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    width: 1280, height: 720, margin: 0.02,
+    hash: true, center: false, transition: 'slide', backgroundTransition: 'fade',
+    progress: true, controls: true, slideNumber: 'c/t',
+    fragments: !location.search.includes('nofrag')
+  });
+
+  // ===== 滑桿視覺化 =====
+  (function () {
+    const s = document.getElementById('viz-slider');
+    const after = document.getElementById('viz-after');
+    const div = document.getElementById('viz-divider');
+    const l1 = document.getElementById('viz-l1'), l2 = document.getElementById('viz-l2');
+    s.addEventListener('input', function () {
+      const v = +this.value;
+      after.style.clipPath = `inset(0 ${100 - v}% 0 0)`;
+      div.style.left = `calc(${v}% - 2px)`;
+      l1.style.opacity = v > 85 ? 0 : 1;
+      l2.style.opacity = v < 15 ? 0 : 1;
+    });
+    l2.style.opacity = 0;
+  })();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="story.js"></script>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+  import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp, query, orderBy,
+           doc, setDoc } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js';
+
+  const app = initializeApp({
+    apiKey: "AIzaSyCo_h88DqCyiqelPYdHQ5q-wAPNaVDNuUs",
+    authDomain: "hrdd-deck-28085.firebaseapp.com",
+    projectId: "hrdd-deck-28085",
+    storageBucket: "hrdd-deck-28085.firebasestorage.app",
+    messagingSenderId: "852916054832",
+    appId: "1:852916054832:web:4227588d09f0de990a36f5"
+  });
+  const fdb = getFirestore(app);
+  const SLUG = 'hrdd_supply_chain';
+
+  let uid;
+  try { uid = localStorage.getItem('hrdd_uid'); if (!uid) { uid = 'u_' + Math.random().toString(36).slice(2, 10); localStorage.setItem('hrdd_uid', uid); } }
+  catch (e) { uid = 'u_' + Math.random().toString(36).slice(2, 10); }
+
+  // ===== 文字雲 =====
+  const SUGGEST = ['政策承諾','專責窗口','風險評估','供應商管理','申訴管道','工時','移工權益','外包商','環安衛','教育訓練','改善紀錄','透明度'];
+  const COLORS = ['#e0b252','#ee7b30','#f3f5f9','#f2c97a','#ff9a5a','#9fb4d8'];
+  const wordsRef = collection(fdb, SLUG + '_wordcloud');
+  let wcData = [];
+  const inp = document.getElementById('wc-input');
+  const chips = document.getElementById('wc-chips');
+  SUGGEST.forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'chip'; b.textContent = w;
+    b.onclick = () => { inp.value = w; inp.focus(); };
+    chips.appendChild(b);
+  });
+
+  // 資料庫無法使用（權限不足／離線）時，自動改為「本機模式」：資料只存在這台電腦的瀏覽器
+  let wcLive = true;
+  const lsGet = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch (e) { return d; } };
+  const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+  const localWords = lsGet(SLUG + '_local_words', []);
+  function showMode(live) {
+    let el = document.getElementById('mode-badge');
+    if (!el) {
+      el = document.createElement('div'); el.id = 'mode-badge';
+      el.style.cssText = 'position:fixed;left:12px;bottom:10px;z-index:50;font-size:13px;padding:3px 10px;border-radius:10px;background:rgba(238,123,48,.85);color:#fff;font-family:inherit;';
+      document.body.appendChild(el);
+    }
+    el.textContent = '互動為本機模式（僅此電腦可見）';
+    el.style.display = live ? 'none' : '';
+  }
+
+  async function wcSubmit() {
+    const word = inp.value.trim();
+    if (!word) return;
+    const btn = document.getElementById('wc-btn');
+    btn.disabled = true;
+    try {
+      if (wcLive) {
+        try { await addDoc(wordsRef, { word, created_at: serverTimestamp() }); inp.value = ''; return; }
+        catch (e) { console.error(e); wcLive = false; showMode(false); }
+      }
+      localWords.push(word); lsSet(SLUG + '_local_words', localWords);
+      renderWords(localWords); inp.value = '';
+    } finally { btn.disabled = false; }
+  }
+  inp.addEventListener('keypress', e => { if (e.key === 'Enter') wcSubmit(); });
+  document.getElementById('wc-btn').addEventListener('click', wcSubmit);
+
+  function drawWordCloud() {
+    const canvas = document.getElementById('wc-canvas');
+    if (typeof WordCloud === 'undefined') return;
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width < 10 || rect.height < 10 || !wcData.length) return;
+    canvas.width = rect.width; canvas.height = rect.height;
+    const max = wcData[0][1];
+    WordCloud(canvas, {
+      list: wcData.map(([w, c]) => [w, Math.max(22, Math.round((c / max) * 80))]),
+      gridSize: 8, weightFactor: 1, rotateRatio: 0.25, shuffle: true,
+      fontFamily: '"Noto Sans TC","Microsoft JhengHei",sans-serif',
+      color: () => COLORS[Math.floor(Math.random() * COLORS.length)],
+      backgroundColor: 'transparent'
+    });
+  }
+  function renderWords(words) {
+    const counts = {};
+    words.forEach(w => counts[w] = (counts[w] || 0) + 1);
+    wcData = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+    document.getElementById('wc-total').textContent = words.length;
+    document.getElementById('wc-unique').textContent = wcData.length;
+    const list = document.getElementById('wc-list');
+    list.replaceChildren();
+    wcData.slice(0, 12).forEach(([w, c]) => {
+      const row = document.createElement('div');
+      const a = document.createElement('span'); a.textContent = w;
+      const n = document.createElement('span'); n.textContent = c; n.style.cssText = 'color:var(--orange);font-weight:700';
+      row.append(a, n); list.appendChild(row);
+    });
+    document.getElementById('wc-empty').style.display = wcData.length ? 'none' : '';
+    drawWordCloud();
+  }
+  onSnapshot(query(wordsRef, orderBy('created_at', 'asc')), snap => {
+    const words = [];
+    snap.forEach(d => { const w = d.data().word; if (typeof w === 'string') words.push(w); });
+    renderWords(words);
+  }, err => { console.error('wordcloud', err); wcLive = false; showMode(false); renderWords(localWords); });
+  Reveal.on('slidechanged', e => { if (e.currentSlide?.id === 'slide-wordcloud') setTimeout(drawWordCloud, 200); });
+
+  // ===== 投票 =====
+  function makePoll(docId, optsId, totalId, errId, OPTIONS) {
+    const ref = doc(fdb, SLUG + '_poll', docId);
+    const box = document.getElementById(optsId);
+    let mine = lsGet(SLUG + '_' + docId, null);
+    let live = true;
+    const localVotes = lsGet(SLUG + '_local_' + docId, {});
+    const els = {};
+    OPTIONS.forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'poll-btn';
+      b.innerHTML = '<span class="key"></span><span class="lbl"></span><span class="bar"><i></i></span><span class="pct">0%</span>';
+      b.querySelector('.key').textContent = o.id.toUpperCase();
+      b.querySelector('.lbl').textContent = o.label;
+      b.onclick = async () => {
+        mine = o.id; lsSet(SLUG + '_' + docId, o.id);
+        if (live) {
+          try { await setDoc(ref, { votes: { [uid]: o.id }, updated_at: serverTimestamp() }, { merge: true }); return; }
+          catch (e) { console.error(e); live = false; showMode(false); }
+        }
+        localVotes[uid] = o.id; lsSet(SLUG + '_local_' + docId, localVotes);
+        renderVotes(localVotes);
+      };
+      box.appendChild(b); els[o.id] = b;
+    });
+    let lastCounts = {};
+    function render(counts) {
+      lastCounts = counts;
+      const total = Object.values(counts).reduce((a, b) => a + b, 0);
+      document.getElementById(totalId).textContent = total;
+      OPTIONS.forEach(o => {
+        const pct = total ? Math.round(((counts[o.id] || 0) / total) * 100) : 0;
+        els[o.id].querySelector('.bar i').style.width = pct + '%';
+        els[o.id].querySelector('.pct').textContent = pct + '%';
+        els[o.id].classList.toggle('mine', mine === o.id);
+      });
+    }
+    render({});
+    function renderVotes(votes) {
+      const counts = {};
+      Object.values(votes).forEach(v => { counts[v] = (counts[v] || 0) + 1; });
+      render(counts);
+    }
+    onSnapshot(ref, snap => renderVotes((snap.data() || {}).votes || {}),
+      err => { console.error('poll', err); live = false; showMode(false); renderVotes(localVotes); });
+  }
+
+  // ===== 客戶問卷：每題「有／沒有」投票 =====
+  function makeQA() {
+    const ref = doc(fdb, SLUG + '_poll', 'questionnaire');
+    const rows = [...document.querySelectorAll('#slide-qa .vt')];
+    let live = true;
+    const localVotes = lsGet(SLUG + '_local_questionnaire', {});
+    const mine = lsGet(SLUG + '_mine_questionnaire', {});
+    let last = {};
+    function render(votes) {
+      last = votes;
+      rows.forEach(r => {
+        const q = r.dataset.q; let y = 0, n = 0;
+        Object.entries(votes).forEach(([k, v]) => { if (k.endsWith('_q' + q)) { if (v === 'y') y++; else if (v === 'n') n++; } });
+        r.querySelector('[data-v=y] i').textContent = y;
+        r.querySelector('[data-v=n] i').textContent = n;
+        r.querySelectorAll('button').forEach(b => b.classList.toggle('mine', mine[q] === b.dataset.v));
+      });
+    }
+    rows.forEach(r => r.querySelectorAll('button').forEach(b => b.onclick = async () => {
+      const q = r.dataset.q, v = b.dataset.v, key = uid + '_q' + q;
+      mine[q] = v; lsSet(SLUG + '_mine_questionnaire', mine); render(last);
+      if (live) {
+        try { await setDoc(ref, { votes: { [key]: v }, updated_at: serverTimestamp() }, { merge: true }); return; }
+        catch (e) { console.error(e); live = false; showMode(false); }
+      }
+      localVotes[key] = v; lsSet(SLUG + '_local_questionnaire', localVotes); render(localVotes);
+    }));
+    render({});
+    onSnapshot(ref, snap => render((snap.data() || {}).votes || {}),
+      err => { console.error('qa', err); live = false; showMode(false); render(localVotes); });
+  }
+  makeQA();
+
+  makePoll('step', 'poll-step-opts', 'poll-step-total', 'poll-step-err', [
+    { id: 'a', label: '還沒開始：目前沒有任何人權相關的整合行動' },
+    { id: 'b', label: 'Step 1 盤點整合：正在盤點勞基、職安、申訴、訓練等現有資源' },
+    { id: 'c', label: 'Step 2 建立政策：正在起草人權承諾、指定專責窗口' },
+    { id: 'd', label: 'Step 3 辨識熱點：正在盤點移工、工時、外包等高風險議題' },
+    { id: 'e', label: 'Step 4 持續改善：已在追蹤申訴、溝通並定期檢討成效' }
+  ]);
+  makePoll('next', 'poll-next-opts', 'poll-next-total', 'poll-next-err', [
+    { id: 'a', label: '先盤點現有制度，整理成一份「勞基／職安／申訴／訓練」對照表' },
+    { id: 'b', label: '先起草人權政策（公開承諾），並指定專責窗口' },
+    { id: 'c', label: '先針對移工、工時、外包做高風險議題的風險盤點' },
+    { id: 'd', label: '先檢視申訴管道，確認員工「知道」也「會用」' },
+    { id: 'e', label: '先建立「客戶問卷佐證資料庫」，讓回覆有憑有據' }
+  ]);
+</script>
+</body>
+</html>
