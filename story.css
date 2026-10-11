@@ -47,3 +47,11 @@
 #story .hud-n { position:absolute; left:50px; bottom:34px; font-size:22px; color:#fff; text-shadow:0 0 6px #000, 0 0 6px #000; z-index:5; }
 #story .hud-k { position:absolute; right:50px; top:34px; font-size:22px; color:#fff; z-index:5; background:rgba(0,0,0,.35); padding:2px 14px; border-radius:20px; }
 #story .prog { position:absolute; left:0; right:0; bottom:0; height:12px; background:rgba(255,255,255,.12); z-index:6; } #story .prog i { display:block; height:100%; width:100%; transform-origin:0 50%; background:linear-gradient(90deg,#e0b252,#ee7b30); }
+
+/* 案例②：AI 動態版影片（真人動作感的 AI 生成短片）播放視窗 */
+.play-btn.alt { background: linear-gradient(#2a6fd6,#1d57ad); box-shadow: 0 0 22px rgba(42,111,214,.5); }
+#vid { position:fixed; inset:0; z-index:2200; background:rgba(3,10,20,.96); display:none; align-items:center; justify-content:center; flex-direction:column; }
+#vid.on { display:flex; }
+#vid video { max-width:100vw; max-height:calc(100vh - 56px); background:#000; outline:none; }
+#vid .vid-note { color:#cfd8e8; font:14px/1.4 "Noto Sans TC","Microsoft JhengHei",sans-serif; padding:10px 14px; text-align:center; }
+#vid-x { position:fixed; top:max(8px, env(safe-area-inset-top)); right:max(8px, env(safe-area-inset-right)); z-index:2210; width:46px; height:46px; border-radius:50%; border:2px solid #e0b252; background:rgba(11,24,48,.85); color:#fff; font-size:24px; line-height:1; cursor:pointer; }
