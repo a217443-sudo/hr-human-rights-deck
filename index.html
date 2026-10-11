@@ -287,6 +287,44 @@
   #story-x { display:none; position:fixed; top:max(8px, env(safe-area-inset-top)); right:max(8px, env(safe-area-inset-right)); z-index:2100; width:46px; height:46px; border-radius:50%; border:2px solid #e0b252; background:rgba(11,24,48,.85); color:#fff; font-size:24px; line-height:1; }
   #story.on ~ #story-x, body.story-open #story-x { display:block; }
   @media (hover:none) { .hide-touch { display:none; } }
+
+  /* ===== 測驗 ===== */
+  #slide-quiz .slide:not(.reveal) { padding: 30px 56px 24px; }
+  .qz-wrap { height: 640px; position: relative; }
+  .qz-screen { display:none; height:100%; } .qz-screen.on { display:block; }
+  .qz-h { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+  .qz-h h2 { font-size: 40px; }
+  .qz-timer { font-size: 34px; font-weight:900; color: var(--gold); font-variant-numeric: tabular-nums; background: rgba(13,26,48,.8); border:2px solid var(--line); border-radius: 14px; padding: 4px 18px; }
+  .qz-reg { max-width: 760px; margin: 26px auto 0; text-align:center; }
+  .qz-reg p { font-size: 26px; line-height: 1.6; color:#dfe5f0; margin: 8px 0 18px; }
+  .qz-reg input { width:100%; box-sizing:border-box; font-family:inherit; font-size: 36px; padding: 14px 20px; border-radius: 16px; border:3px solid var(--line); background: rgba(255,255,255,.08); color:#fff; text-align:center; outline:none; }
+  .qz-btn { font-family:inherit; font-size: 30px; font-weight: 900; padding: 12px 38px; border-radius: 40px; border: 3px solid var(--gold); background: linear-gradient(#ee7b30,#d96a22); color:#fff; cursor:pointer; margin-top: 18px; }
+  .qz-btn.ghost { background: transparent; border-color: rgba(255,255,255,.35); font-size: 22px; padding: 8px 24px; }
+  .qz-btn:disabled { opacity:.45; }
+  .qz-rules { display:flex; gap:14px; justify-content:center; margin-top: 18px; flex-wrap:wrap; }
+  .qz-rules span { font-size: 21px; background: rgba(13,26,48,.8); border:1px solid var(--line); border-radius: 30px; padding: 4px 18px; }
+  .qz-prog { height: 12px; background: rgba(255,255,255,.12); border-radius: 6px; overflow:hidden; margin-top: 14px; } .qz-prog i { display:block; height:100%; width:0; background: linear-gradient(90deg,#e0b252,#ee7b30); transition: width .3s; }
+  .qz-meta { display:flex; justify-content:space-between; font-size: 22px; color: var(--muted); margin-top: 8px; }
+  .qz-q { font-size: 42px; font-weight: 800; line-height: 1.4; margin: 18px 0 20px; min-height: 120px; }
+  .qz-q em { font-style:normal; font-size:24px; background: var(--orange); color:#fff; border-radius: 20px; padding: 2px 16px; margin-right: 14px; vertical-align: middle; }
+  .qz-opts { display:grid; gap: 12px; }
+  .qz-opts.tf { grid-template-columns: 1fr 1fr; }
+  .qz-opt { font-family:inherit; text-align:left; font-size: 30px; font-weight: 700; color:#fff; padding: 14px 22px; border-radius: 16px; border: 3px solid rgba(255,255,255,.25); background: rgba(13,26,48,.82); cursor:pointer; display:flex; align-items:center; gap:16px; line-height:1.35; }
+  .qz-opt b { flex:0 0 46px; height:46px; border-radius:50%; background: var(--gold); color:#1b2a44; display:flex; align-items:center; justify-content:center; font-size: 26px; }
+  .qz-opts.tf .qz-opt { justify-content:center; font-size: 44px; min-height: 150px; } .qz-opts.tf .qz-opt b { display:none; }
+  .qz-opt:hover { border-color: var(--gold); } .qz-opt.pick { background: var(--orange); border-color: var(--orange); }
+  .qz-res { text-align:center; }
+  .qz-big { display:flex; gap: 22px; justify-content:center; margin-top: 12px; }
+  .qz-big div { background: rgba(13,26,48,.85); border:2px solid var(--line); border-radius: 18px; padding: 10px 30px; }
+  .qz-big small { display:block; font-size: 20px; color: var(--muted); } .qz-big b { font-size: 56px; color: var(--gold); line-height:1.1; }
+  .qz-board { width:100%; border-collapse: separate; border-spacing: 0 6px; margin-top: 8px; }
+  .qz-board th { font-size: 18px; color: var(--muted); text-align:left; padding: 0 14px; }
+  .qz-board td { background: rgba(13,26,48,.82); padding: 8px 14px; font-size: 26px; font-weight: 700; }
+  .qz-board td:first-child { border-radius: 12px 0 0 12px; width: 80px; color: var(--gold); font-size: 30px; font-weight: 900; } .qz-board td:last-child { border-radius: 0 12px 12px 0; }
+  .qz-board tr.me td { background: rgba(238,123,48,.35); }
+  .qz-board tr.r1 td:first-child::before { content:"🥇 "; } .qz-board tr.r2 td:first-child::before { content:"🥈 "; } .qz-board tr.r3 td:first-child::before { content:"🥉 "; }
+  .qz-note { font-size: 20px; color: var(--muted); margin-top: 6px; }
+  .qz-cols { display:grid; grid-template-columns: 1fr 1.25fr; gap: 26px; margin-top: 6px; align-items:start; }
 </style>
 <link rel="stylesheet" href="story.css" />
 </head>
@@ -722,6 +760,49 @@
   </div>
 </section>
 
+
+<!-- 測驗：人權管理小測驗（含排行榜） -->
+<section id="slide-quiz" data-prevent-swipe>
+  <div class="slide">
+    <div class="qz-wrap">
+      <!-- 1 登錄 -->
+      <div class="qz-screen on" id="qz-reg">
+        <div class="qz-h"><h2>人權管理 <span class="gold">10 題小測驗</span></h2></div>
+        <div class="qz-reg">
+          <p>請先登錄你的姓名（或暱稱），按「開始測驗」後開始計時。<br>答對越多、用時越短，排名越前面！</p>
+          <input id="qz-name" type="text" maxlength="12" placeholder="輸入姓名（最多 12 字）" autocomplete="off" />
+          <div class="qz-rules"><span>共 10 題</span><span>是非＋選擇</span><span>排名：先比答對題數，再比用時</span></div>
+          <button class="qz-btn" id="qz-start">開始測驗 ▶</button><br>
+          <button class="qz-btn ghost" id="qz-seeboard">只看排行榜</button>
+        </div>
+      </div>
+      <!-- 2 作答 -->
+      <div class="qz-screen" id="qz-play">
+        <div class="qz-h"><h2 id="qz-who"></h2><div class="qz-timer" id="qz-timer">00:00</div></div>
+        <div class="qz-prog"><i id="qz-bar"></i></div>
+        <div class="qz-meta"><span id="qz-no">第 1 / 10 題</span><span>選好答案會自動進入下一題</span></div>
+        <div class="qz-q" id="qz-q"></div>
+        <div class="qz-opts" id="qz-opts"></div>
+      </div>
+      <!-- 3 成績＋排行榜 -->
+      <div class="qz-screen" id="qz-end">
+        <div class="qz-h"><h2 id="qz-endtitle">測驗結果</h2><button class="qz-btn ghost" id="qz-again" style="margin:0">再測一次</button></div>
+        <div class="qz-cols">
+          <div class="qz-res" id="qz-mine">
+            <div class="qz-big"><div><small>答對</small><b id="qz-s">0</b></div><div><small>用時</small><b id="qz-t">0:00</b></div><div><small>名次</small><b id="qz-r">-</b></div></div>
+            <p class="qz-note" id="qz-msg"></p>
+            <div id="qz-wrong" style="text-align:left;font-size:19px;line-height:1.55;margin-top:6px;color:#dfe5f0;"></div>
+          </div>
+          <div>
+            <table class="qz-board"><thead><tr><th>名次</th><th>姓名</th><th>答對</th><th>用時</th></tr></thead><tbody id="qz-body"></tbody></table>
+            <div class="qz-note">排名：先比答對題數，再比用時（越短越前）。每人以最佳成績計。共 <b id="qz-cnt">0</b> 人完成。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 </div>
 </div>
 
@@ -944,6 +1025,98 @@
       err => { console.error('qa', err); live = false; showMode(false); render(localVotes); });
   }
   makeQA();
+
+  // ===== 測驗 =====
+  (function () {
+    const QS = [
+      { t: 'tf', q: 'RBA 準則規定：每週工時（含加班）不得超過 60 小時（緊急或特殊情況除外）。', a: 0, why: '正確：每週含加班 ≤ 60 小時，並應每 7 天休息 1 日。' },
+      { t: 'mc', q: '依「零招聘費」原則，移工的招募費用應由誰負擔？', o: ['移工自己', '雇主（公司）', '仲介與移工各一半', '政府'], a: 1, why: '應由雇主負擔，移工不應為取得工作而付費。' },
+      { t: 'tf', q: '為了保管方便，由公司「代為保管」移工的護照是被接受的做法。', a: 1, why: '不可以：不得持有勞工的原始身分證件。' },
+      { t: 'mc', q: '若發現移工已被收取招募費，RBA 要求在幾天內返還？', o: ['30 天', '60 天', '90 天', '180 天'], a: 2, why: 'RBA：已收取的費用須在 90 天內返還。' },
+      { t: 'tf', q: 'HRDD（人權盡職調查）是做一次、勾完就結束的作業。', a: 1, why: '不是：它是持續監測、修正與進化的循環。' },
+      { t: 'mc', q: '台灣「臺灣企業供應鏈尊重人權方案」率先實施的對象，是製造業前一年度營業額達多少的上市櫃公司？', o: ['新臺幣 50 億元', '新臺幣 100 億元', '新臺幣 500 億元', '新臺幣 1,000 億元'], a: 2, why: '率先對象：製造業、營業額達 500 億元的上市櫃公司。' },
+      { t: 'mc', q: '案例中，明昌國際被客戶查廠沒通過，客戶通知的是誰？', o: ['董事長', '人資主管', '採購主管', '品保主管'], a: 1, why: '通知的是人資主管：稽核重點延伸到招募費用與薪資流程。' },
+      { t: 'tf', q: '申訴機制只要設一個信箱就夠了，不需要用移工的母語說明。', a: 1, why: '不夠：要用母語、可保密、不報復，並有調查與回覆。' },
+      { t: 'mc', q: 'HRDD 動態管理循環的「第一步」是什麼？', o: ['追蹤有效性', '溝通與說明', '減輕損害', '風險辨識'], a: 3, why: '循環從「風險辨識」開始：先找出潛在的地雷。' },
+      { t: 'tf', q: '填寫客戶人權問卷時，寧可誠實勾「部分符合」並附改善計畫，也不要勾「完全符合」卻拿不出文件。', a: 0, why: '正確：缺乏佐證的亂勾選，會帶來丟單風險。' }
+    ];
+    const $ = id => document.getElementById(id);
+    const colRef = collection(fdb, SLUG + '_quiz');
+    const fmt = ms => { const t = Math.round(ms / 100) / 10, m = Math.floor(t / 60), s = (t - m * 60); return m + ':' + (s < 10 ? '0' : '') + s.toFixed(1); };
+    const show = id => ['qz-reg', 'qz-play', 'qz-end'].forEach(x => $(x).classList.toggle('on', x === id));
+    let name = lsGet(SLUG + '_qname', ''), idx = 0, ans = [], t0 = 0, tick = null, board = [], quizLive = true, mineRec = null;
+    const localBoard = lsGet(SLUG + '_local_quiz', []);
+    $('qz-name').value = name;
+
+    function best(list) { // 每人取最佳：答對多者優先，同分用時短者
+      const m = new Map();
+      list.forEach(r => { const k = r.name; const c = m.get(k); if (!c || r.score > c.score || (r.score === c.score && r.ms < c.ms)) m.set(k, r); });
+      return [...m.values()].sort((a, b) => b.score - a.score || a.ms - b.ms);
+    }
+    function renderBoard() {
+      const list = best(quizLive ? board : board.concat(localBoard));
+      const tb = $('qz-body'); tb.replaceChildren();
+      list.slice(0, 10).forEach((r, i) => {
+        const tr = document.createElement('tr'); tr.className = 'r' + (i + 1) + (mineRec && r.name === mineRec.name ? ' me' : '');
+        [i + 1, r.name, r.score + ' / 10', fmt(r.ms)].forEach(v => { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); });
+        tb.appendChild(tr);
+      });
+      $('qz-cnt').textContent = list.length;
+      if (mineRec) { const i = list.findIndex(r => r.name === mineRec.name); $('qz-r').textContent = i >= 0 ? '第 ' + (i + 1) + ' 名' : '-'; }
+    }
+    onSnapshot(colRef, snap => { gotSnap = true; board = []; snap.forEach(d => { const x = d.data(); if (x && typeof x.name === 'string') board.push({ name: x.name, score: x.score | 0, ms: x.ms | 0 }); }); renderBoard(); },
+      err => { console.error('quiz', err); quizLive = false; showMode(false); renderBoard(); });
+
+    function showQ() {
+      const q = QS[idx];
+      $('qz-no').textContent = '第 ' + (idx + 1) + ' / 10 題';
+      $('qz-bar').style.width = (idx / 10 * 100) + '%';
+      $('qz-q').innerHTML = ''; const em = document.createElement('em'); em.textContent = q.t === 'tf' ? '是非' : '選擇'; $('qz-q').append(em, document.createTextNode(q.q));
+      const box = $('qz-opts'); delete box.dataset.lock; box.replaceChildren(); box.className = 'qz-opts' + (q.t === 'tf' ? ' tf' : '');
+      const opts = q.t === 'tf' ? ['⭕ 正確', '❌ 錯誤'] : q.o;
+      opts.forEach((txt, i) => {
+        const b = document.createElement('button'); b.className = 'qz-opt';
+        if (q.t === 'mc') { const l = document.createElement('b'); l.textContent = 'ABCD'[i]; b.appendChild(l); }
+        b.appendChild(document.createTextNode(txt));
+        b.onclick = () => { if (b.parentNode.dataset.lock) return; b.parentNode.dataset.lock = 1; b.classList.add('pick'); ans[idx] = i; setTimeout(next, 280); };
+        box.appendChild(b);
+      });
+    }
+    function next() { idx++; if (idx >= QS.length) return finish(); showQ(); }
+    function start() {
+      const n = $('qz-name').value.trim().replace(/\s+/g, ' ');
+      if (!n) { $('qz-name').focus(); $('qz-name').style.borderColor = '#ee7b30'; return; }
+      name = n; lsSet(SLUG + '_qname', name);
+      idx = 0; ans = []; mineRec = null; $('qz-who').textContent = name;
+      show('qz-play'); showQ(); t0 = performance.now(); clearInterval(tick);
+      tick = setInterval(() => { const t = (performance.now() - t0) / 1000, m = Math.floor(t / 60), s = Math.floor(t % 60); $('qz-timer').textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s; }, 250);
+    }
+    async function finish() {
+      clearInterval(tick); const ms = Math.round(performance.now() - t0);
+      const score = QS.reduce((a, q, i) => a + (ans[i] === q.a ? 1 : 0), 0);
+      mineRec = { name, score, ms };
+      $('qz-endtitle').textContent = name + ' 的成績'; $('qz-s').textContent = score + '/10'; $('qz-t').textContent = fmt(ms); $('qz-r').textContent = '…';
+      $('qz-msg').textContent = score === 10 ? '🎉 全對！' : score >= 8 ? '👍 很不錯！' : score >= 6 ? '再複習一下就更好了' : '建議回頭看看簡報重點';
+      const wrong = QS.map((q, i) => ({ q, i })).filter(x => ans[x.i] !== x.q.a);
+      $('qz-wrong').replaceChildren();
+      if (wrong.length) {
+        const h = document.createElement('div'); h.style.cssText = 'color:var(--gold);font-weight:800;font-size:21px'; h.textContent = '答錯的題目：'; $('qz-wrong').appendChild(h);
+        wrong.slice(0, 4).forEach(x => { const d = document.createElement('div'); d.textContent = '第 ' + (x.i + 1) + ' 題：' + x.q.why; $('qz-wrong').appendChild(d); });
+        if (wrong.length > 4) { const d = document.createElement('div'); d.textContent = '…另有 ' + (wrong.length - 4) + ' 題答錯'; $('qz-wrong').appendChild(d); }
+      }
+      show('qz-end'); renderBoard();
+      if (quizLive) {
+        try { await withTimeout(addDoc(colRef, { name, score, ms, total: 10, created_at: serverTimestamp() }), 7000); return; }
+        catch (e) { console.error(e); quizLive = false; showMode(false); }
+      }
+      localBoard.push(mineRec); lsSet(SLUG + '_local_quiz', localBoard); renderBoard();
+    }
+    $('qz-start').onclick = start;
+    $('qz-name').addEventListener('keypress', e => { if (e.key === 'Enter') start(); });
+    $('qz-seeboard').onclick = () => { mineRec = null; $('qz-endtitle').textContent = '排行榜'; $('qz-s').textContent = '-'; $('qz-t').textContent = '-'; $('qz-r').textContent = '-'; $('qz-msg').textContent = ''; $('qz-wrong').replaceChildren(); show('qz-end'); renderBoard(); };
+    $('qz-again').onclick = () => { clearInterval(tick); show('qz-reg'); };
+  })();
+
 
   makePoll('step', 'poll-step-opts', 'poll-step-total', 'poll-step-err', [
     { id: 'a', label: '還沒開始：目前沒有任何人權相關的整合行動' },
