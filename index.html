@@ -265,6 +265,18 @@
   #slide-qa .slide:not(.reveal) { padding-top: 32px; padding-bottom: 28px; }
   #slide-qa .qrow { padding: 8px 20px; }
   #slide-qa .vt button { padding: 6px 6px; }
+
+  /* ILO 11 指標 */
+  .ilo { display:grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 10px; }
+  .ilo .c { background: rgba(13,26,48,.82); border:2px solid var(--line); border-radius: 12px; padding: 7px 12px 8px; min-height: 132px; }
+  .ilo .c .n { display:inline-block; width:28px; height:28px; border-radius:50%; background: var(--orange); color:#fff; font-weight:900; font-size:16px; line-height:28px; text-align:center; margin-right:8px; }
+  .ilo .c h3 { font-size: 22px; font-weight: 800; display:inline; vertical-align: middle; }
+  .ilo .c small { display:block; font-size: 13px; color: var(--muted); margin: 3px 0 4px; }
+  .ilo .c p { font-size: 17px; line-height: 1.4; margin: 0; color:#dfe5f0; }
+  .ilo .c.link { border-color: var(--gold); background: rgba(224,178,82,.14); }
+  .ilo .c.link .n { background: var(--gold); color:#1b2a44; }
+  .ilo .c.note { border-style: dashed; display:flex; align-items:center; }
+  .ilo .c.note p { font-size: 18px; line-height: 1.5; }
   /* 案例頁 */
   ul.facts { list-style:none; padding:0 !important; margin:8px 0 0 !important; }
   ul.facts li { font-size: 21px; line-height: 1.55; margin-bottom: 8px; padding-left: 0; }
@@ -733,6 +745,29 @@
     </div>
     <div class="banner fragment" style="margin-top:22px;font-size:22px;">這四條，加上國際勞工組織（ILO）列出的 11 項強迫勞動指標，是客戶查廠最常對照的底線。</div>
     <div class="src">依 RBA 行為準則（工時、招募費、強迫勞動）整理，請以最新版（v8.0, 2024）原文為準。</div>
+  </div>
+</section>
+
+<!-- ILO 11 項強迫勞動指標 -->
+<section>
+  <div class="slide">
+    <h2 class="sm">國際勞工組織（ILO）的 <span class="gold">11 項強迫勞動指標</span></h2>
+    <div class="q-hint" style="margin-top:0;font-size:21px;">客戶與稽核最常拿來檢視「有沒有強迫勞動疑慮」的國際對照表</div>
+    <div class="ilo">
+      <div class="c"><span class="n">1</span><h3>濫用弱勢處境</h3><small>Abuse of vulnerability</small><p>利用語言不通、不熟法規、難以換雇主的處境逼迫工作</p></div>
+      <div class="c"><span class="n">2</span><h3>欺騙</h3><small>Deception</small><p>招募時承諾的薪資、工作、條件，與實際不符</p></div>
+      <div class="c"><span class="n">3</span><h3>限制行動自由</h3><small>Restriction of movement</small><p>宿舍上鎖、限制外出或離開工廠</p></div>
+      <div class="c"><span class="n">4</span><h3>孤立</h3><small>Isolation</small><p>住在偏遠處、不准與外界或家人聯絡</p></div>
+      <div class="c"><span class="n">5</span><h3>身體與性暴力</h3><small>Physical &amp; sexual violence</small><p>毆打、性騷擾、性侵</p></div>
+      <div class="c"><span class="n">6</span><h3>恐嚇與威脅</h3><small>Intimidation &amp; threats</small><p>威脅減薪、遣返、報警或通報移民署</p></div>
+      <div class="c link"><span class="n">7</span><h3>扣留身分證件</h3><small>Retention of ID documents</small><p>公司「代管」護照、居留證，不還給本人</p></div>
+      <div class="c"><span class="n">8</span><h3>扣發工資</h3><small>Withholding of wages</small><p>不給薪、延遲發薪、不合理罰款或扣款</p></div>
+      <div class="c link"><span class="n">9</span><h3>債務束縛</h3><small>Debt bondage</small><p>仲介費或借款變成債務，要用工作償還</p></div>
+      <div class="c"><span class="n">10</span><h3>惡劣的工作與生活條件</h3><small>Abusive conditions</small><p>危險作業、擁擠不衛生的宿舍</p></div>
+      <div class="c link"><span class="n">11</span><h3>過度加班</h3><small>Excessive overtime</small><p>超過法律與準則上限，或不能拒絕加班</p></div>
+      <div class="c note"><p>▲ 金色框＝對應<b class="gold">四條紅線</b>（不扣證件、零招聘費、60 小時）。<br>ILO：有時單一指標就足以判定，有時需多項併看。</p></div>
+    </div>
+    <div class="banner" style="margin-top:12px;font-size:21px;padding:10px 20px;">對人資：多數指標都能靠「申訴管道＋訪談＋文件」提早發現，重點是留下紀錄。</div>
   </div>
 </section>
 
